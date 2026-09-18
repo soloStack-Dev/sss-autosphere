@@ -1,23 +1,42 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
+const defaultUrl = process.env.NEXT_PUBLIC_APP_URL
+  ? process.env.NEXT_PUBLIC_APP_URL
+  : process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000";
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: {
+    default: `${siteConfig.displayName} | ${siteConfig.location}`,
+    template: `%s | ${siteConfig.displayName}`,
+  },
+  description: siteConfig.description,
+  applicationName: siteConfig.displayName,
+  keywords: [
+    "SSS Auto Spares",
+    "car spare parts Chennai",
+    "auto parts Chennai",
+    "used car spares",
+    "old vehicle parts",
+    "scrap vehicle purchasing",
+  ],
+  openGraph: {
+    title: `${siteConfig.displayName} | ${siteConfig.location}`,
+    description: siteConfig.description,
+    type: "website",
+    locale: "en_IN",
+    siteName: siteConfig.displayName,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  display: "swap",
-  subsets: ["latin"],
-});
 
 export default function RootLayout({
   children,
@@ -26,11 +45,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased`}>
+      <body className="antialiased">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
           {children}

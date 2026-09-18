@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
@@ -10,7 +11,32 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: [
+          "Inter",
+          "ui-sans-serif",
+          "system-ui",
+          "-apple-system",
+          "Segoe UI",
+          "Roboto",
+          "Arial",
+          "Noto Sans",
+          "sans-serif",
+        ],
+      },
       colors: {
+        royal: "hsl(var(--royal))",
+        navy: "hsl(var(--navy))",
+        "footer-navy": "hsl(var(--footer-navy))",
+        paleblue: "hsl(var(--paleblue))",
+        softblue: "hsl(var(--softblue))",
+        "main-text": "hsl(var(--main-text))",
+        "body-text": "hsl(var(--body-text))",
+        "muted-text": "hsl(var(--muted-text))",
+        line: "hsl(var(--line))",
+        cream: "hsl(var(--cream))",
+        warmorange: "hsl(var(--accent-orange))",
+        warmbrown: "hsl(var(--warm-brown))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -57,7 +83,11 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      boxShadow: {
+        card: "0 8px 24px rgba(15, 35, 75, 0.08)",
+        "card-hover": "0 14px 34px rgba(15, 35, 75, 0.14)",
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
 } satisfies Config;
