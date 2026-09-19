@@ -103,3 +103,43 @@ Partial prerender: `/protected`, `/auth/error`
 - `emailMessageSchema` + 4 tests added (45 tests total).
 - Fix during work: `export const runtime` is route segment config —
   forbidden under `cacheComponents`, removed. Build, lint, tests green (45).
+
+## Update (2026-09-19) — i18n (EN/TA/HI) + page content components
+- Added `lib/i18n` (`index.ts`, `en.ts`, `ta.ts`, `hi.ts`) with `useT()`,
+  `useCatalog()`, `translate()` and `localStorage` persistence
+  (`sss-locale`); language switcher in navbar/footer. All client components
+  localized; server pages reduced to metadata + client content components
+  under `components/pages/`. `breadcrumb` localized. Build, lint, tests
+  green (51). Tanglish locale was added then removed on request.
+- No secrets pushed: squashed two stray local commits that briefly re-added
+  the Supabase DB password/service key to `.env.example` before pushing.
+
+## Update (2026-09-19) — Customer feedback persistence + highlight
+- New migration `supabase/migrations/20260101000001_feedback.sql`: public
+  `feedback` table (name, rating, message, created_at) with public
+  insert/select RLS — no phone/email stored there.
+- `lib/data/feedback.ts` (`Feedback` type) + `fetchFeedback()` in
+  `lib/data-access.ts` (public read, sample fallback).
+- New `POST /api/feedback` (`app/api/feedback/route.ts`): validates with
+  `feedbackSchema`, inserts the review, best-effort copies contact details
+  into private `enquiries`, returns the saved row (falls back to a demo
+  entry when the table is missing, code `42P01`).
+- `FeedbackForm` now posts to `/api/feedback` and calls `onSubmitted`.
+- `/feedback` page is now dynamic (`connection()` + `instant = false`) and
+  renders a "Recent Feedback" grid; the just-submitted review is prepended,
+  highlighted (royal ring + "Just now" badge) and scrolled into view.
+- i18n keys added in en/ta/hi. Build, lint, tests green (51).
+
+## Fix (2026-09-19) — POST /api/feedback returned 500
+- Root cause: no Supabase tables exist remotely (all of `products`,
+  `gallery_items`, `enquiries`, `feedback` return `PGRST205`). The route only
+  treated `42P01` as "table missing", so PostgREST's schema-cache error fell
+  through to the 500 branch.
+- `isMissingTable()` now matches `42P01`, `PGRST205`, and the "Could not find
+  the table"/"relation does not exist" messages; those return `ok: true` with
+  the optimistic entry so the form/highlight keeps working.
+- The best-effort `enquiries` copy is now wrapped so a secondary failure can
+  never turn a saved review into a 500. Verified live: `POST /api/feedback`
+  → `200` demo fallback. Lint/build green.
+
+

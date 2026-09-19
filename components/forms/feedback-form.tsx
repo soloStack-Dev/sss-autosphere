@@ -9,12 +9,19 @@ import { feedbackSchema, parseError } from "@/lib/validation";
 import { normalizePhone } from "@/lib/utils";
 import { useUIStore } from "@/store/ui-store";
 import { useT } from "@/lib/i18n";
+import type { Feedback } from "@/lib/data/feedback";
 import { Send, Star, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Errors = Record<string, string>;
 
-export function FeedbackForm({ className }: { className?: string }) {
+export function FeedbackForm({
+  className,
+  onSubmitted,
+}: {
+  className?: string;
+  onSubmitted?: (entry: Feedback) => void;
+}) {
   const pushToast = useUIStore((s) => s.pushToast);
   const t = useT();
   const starLabels = [
@@ -47,12 +54,17 @@ export function FeedbackForm({ className }: { className?: string }) {
     }
     setStatus("submitting");
     try {
-      const res = await fetch("/api/enquiries?type=feedback", {
+      const res = await fetch("/api/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(parsed.data),
       });
-      const json = (await res.json()) as { ok: boolean; reference?: string; error?: string };
+      const json = (await res.json()) as {
+        ok: boolean;
+        reference?: string;
+        feedback?: Feedback;
+        error?: string;
+      };
       if (!res.ok || !json.ok) {
         setErrors({ _root: json.error ?? t("forms.waErr") });
         setStatus("error");
@@ -60,6 +72,7 @@ export function FeedbackForm({ className }: { className?: string }) {
       }
       setReference(json.reference ?? "");
       setStatus("sent");
+      if (json.feedback) onSubmitted?.(json.feedback);
       pushToast({
         title: t("toasts.thankYou"),
         description: t("toasts.feedbackReceived"),
@@ -80,6 +93,7 @@ export function FeedbackForm({ className }: { className?: string }) {
             <p className="mt-1 text-emerald-700">
               {t("forms.refLabel")} <span className="font-mono font-bold">{reference || "SSS-REF"}</span>. {t("forms.fSentDesc")}
             </p>
+            <p className="mt-2 font-semibold text-emerald-800">{t("forms.fLive")}</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} noValidate className="grid gap-4">

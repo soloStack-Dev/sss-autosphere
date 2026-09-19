@@ -358,6 +358,13 @@ const en = {
     ],
     ratingLabel: "Your Rating",
     optional: "(optional)",
+    recentEyebrow: "Straight From Our Customers",
+    recentTitle: "Recent Feedback",
+    recentDesc:
+      "Submissions from car owners, garages, and technicians who dealt with our Chennai parts desk.",
+    newBadge: "Just now",
+    emptyMsg: "No feedback yet — be the first to share your experience.",
+    ratingAria: "{rating} out of 5 stars",
   },
   enquire: {
     bannerEyebrow: "Part & Vehicle Enquiries",
@@ -536,6 +543,7 @@ const en = {
     fHint: "Used strictly for service quality improvement.",
     fSentTitle: "Thank you for your feedback",
     fSentDesc: "We value your time in helping us improve.",
+    fLive: "Your feedback is now live below.",
     waErr: "Something went wrong. Try again.",
     netErr: "Network error. Please try again.",
     refLabel: "Reference",

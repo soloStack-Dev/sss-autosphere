@@ -2,6 +2,7 @@ import { createClient as createSupabaseClient, type SupabaseClient } from "@supa
 import { hasEnvVars } from "@/lib/utils";
 import { sampleProducts, productCategories } from "@/lib/data/products";
 import { sampleGallery, galleryCategories } from "@/lib/data/gallery";
+import { sampleFeedback, type Feedback } from "@/lib/data/feedback";
 import { homeCategories, services, trustMetrics, trustPoints } from "@/lib/data/home";
 
 /**
@@ -74,6 +75,28 @@ export async function fetchGalleryItems() {
     }));
   } catch {
     return sampleGallery;
+  }
+}
+
+export async function fetchFeedback(): Promise<Feedback[]> {
+  const client = dataClient();
+  if (!client) return sampleFeedback;
+  try {
+    const { data, error } = await client
+      .from("feedback")
+      .select("id,name,rating,message,created_at")
+      .order("created_at", { ascending: false })
+      .limit(30);
+    if (error || !data) return sampleFeedback;
+    return data.map((row) => ({
+      id: pick(row, "id", crypto.randomUUID()),
+      name: pick(row, "name", "Customer"),
+      rating: Number(pick(row, "rating", 5)),
+      message: pick(row, "message", ""),
+      createdAt: pick(row, "created_at", new Date().toISOString()),
+    }));
+  } catch {
+    return sampleFeedback;
   }
 }
 
