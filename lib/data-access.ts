@@ -17,6 +17,12 @@ function dataClient(): SupabaseClient | null {
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
       auth: { persistSession: false, autoRefreshToken: false },
+      // Always read the live table so edits/deletions made by the shop owner
+      // are reflected immediately (no Next.js / fetch cache).
+      global: {
+        fetch: ((input: RequestInfo | URL, init?: RequestInit) =>
+          fetch(input, { ...init, cache: "no-store" })) as typeof fetch,
+      },
     },
   );
 }

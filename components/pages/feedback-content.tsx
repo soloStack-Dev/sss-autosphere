@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useCatalog } from "@/lib/i18n";
 import { PageBanner } from "@/components/shared/page-banner";
 import { SectionReveal } from "@/components/layout/section-reveal";
@@ -45,12 +45,65 @@ function formatDate(iso: string) {
   });
 }
 
+/** Review ids that only exist in the browser (database unavailable / demo mode). */
+const LOCAL_ID_PREFIX = "local-";
+
 export function FeedbackContent({ feedback }: { feedback: Feedback[] }) {
   const catalog = useCatalog();
   const feedbackText = catalog.feedback as FeedbackCatalog;
   const nav = catalog.nav as { feedback: string };
   const [items, setItems] = useState<Feedback[]>(feedback);
   const [highlightId, setHighlightId] = useState<string | null>(null);
+
+  /**
+   * Replace the list with the database snapshot. Optimistic (local-only)
+   * reviews are kept; anything that has since been deleted in the database —
+   * e.g. a duplicate removed by the shop owner — disappears.
+   */
+  const applyServerList = useCallback((list: Feedback[]) => {
+    setItems((prev) => {
+      const serverIds = new Set(list.map((item) => item.id));
+      const optimistic = prev.filter(
+        (item) => item.id.startsWith(LOCAL_ID_PREFIX) && !serverIds.has(item.id),
+      );
+      return [...optimistic, ...list].slice(0, 30);
+    });
+    setHighlightId((current) =>
+      current && list.some((item) => item.id === current) ? current : null,
+    );
+  }, []);
+
+  // Keep the list in step with the server snapshot (navigation / reload).
+  useEffect(() => {
+    applyServerList(feedback);
+  }, [feedback, applyServerList]);
+
+  // Re-sync when the visitor returns to the tab, so deletions made directly in
+  // the database show up without a manual reload.
+  useEffect(() => {
+    let cancelled = false;
+    async function refresh() {
+      try {
+        const res = await fetch("/api/feedback", { cache: "no-store" });
+        const json = (await res.json()) as { ok?: boolean; feedback?: Feedback[] };
+        if (!cancelled && json.ok && Array.isArray(json.feedback)) {
+          applyServerList(json.feedback);
+        }
+      } catch {
+        /* keep the current list on network errors */
+      }
+    }
+    function onVisible() {
+      if (document.visibilityState === "visible") refresh();
+    }
+    window.addEventListener("focus", refresh);
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("focus", refresh);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [applyServerList]);
 
   function handleSubmitted(entry: Feedback) {
     setItems((prev) => [

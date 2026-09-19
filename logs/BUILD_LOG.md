@@ -142,4 +142,20 @@ Partial prerender: `/protected`, `/auth/error`
   never turn a saved review into a 500. Verified live: `POST /api/feedback`
   → `200` demo fallback. Lint/build green.
 
+## Feature (2026-09-19) — Feedback list re-syncs with the database
+- Problem: the list was seeded into `useState` once, so rows the shop owner
+  deleted in Supabase stayed visible until a full server re-render, and reads
+  could be cached.
+- `lib/data-access.ts`: Supabase client now uses a `no-store` fetch, so reads
+  always hit the live table.
+- New `GET /api/feedback` returns the current list (no-store header) for the
+  client to re-sync.
+- `feedback-content.tsx`: `applyServerList()` replaces the list with the
+  database snapshot (dropping deleted rows, keeping only `local-*` demo
+  entries), clears a stale highlight, syncs on server-prop change, and
+  refetches on window `focus` / `visibilitychange`.
+- Verified: `GET /api/feedback` → `200` with the live row; lint/build/tests
+  green (51).
+
+
 

@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
+import { connection } from "next/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { feedbackSchema, parseError } from "@/lib/validation";
 import { hasEnvVars } from "@/lib/utils";
+import { fetchFeedback } from "@/lib/data-access";
 import type { Feedback } from "@/lib/data/feedback";
 
 /**
@@ -13,6 +15,15 @@ function isMissingTable(error: { code?: string; message?: string } | null) {
   if (error.code === "42P01" || error.code === "PGRST205") return true;
   return /could not find the table|relation .* does not exist/i.test(
     error.message ?? "",
+  );
+}
+
+export async function GET() {
+  await connection();
+  const feedback = await fetchFeedback();
+  return NextResponse.json(
+    { ok: true, feedback },
+    { headers: { "cache-control": "no-store" } },
   );
 }
 
