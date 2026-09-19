@@ -8,15 +8,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { feedbackSchema, parseError } from "@/lib/validation";
 import { normalizePhone } from "@/lib/utils";
 import { useUIStore } from "@/store/ui-store";
+import { useT } from "@/lib/i18n";
 import { Send, Star, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Errors = Record<string, string>;
 
-const starLabels = ["Terrible", "Poor", "Okay", "Good", "Excellent"];
-
 export function FeedbackForm({ className }: { className?: string }) {
   const pushToast = useUIStore((s) => s.pushToast);
+  const t = useT();
+  const starLabels = [
+    t("forms.stars.0"),
+    t("forms.stars.1"),
+    t("forms.stars.2"),
+    t("forms.stars.3"),
+    t("forms.stars.4"),
+  ];
   const [form, setForm] = useState({ name: "", phone: "", email: "", rating: 0, message: "" });
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "sent" | "error">("idle");
@@ -47,19 +54,19 @@ export function FeedbackForm({ className }: { className?: string }) {
       });
       const json = (await res.json()) as { ok: boolean; reference?: string; error?: string };
       if (!res.ok || !json.ok) {
-        setErrors({ _root: json.error ?? "Something went wrong. Try again." });
+        setErrors({ _root: json.error ?? t("forms.waErr") });
         setStatus("error");
         return;
       }
       setReference(json.reference ?? "");
       setStatus("sent");
       pushToast({
-        title: "Thank you!",
-        description: "Your feedback has been recorded. Chennai desk reads every review.",
+        title: t("toasts.thankYou"),
+        description: t("toasts.feedbackReceived"),
         tone: "success",
       });
     } catch {
-      setErrors({ _root: "Network error. Please try again." });
+      setErrors({ _root: t("forms.netErr") });
       setStatus("error");
     }
   }
@@ -69,35 +76,35 @@ export function FeedbackForm({ className }: { className?: string }) {
       <div className="rounded-2xl border border-line bg-white p-5 shadow-card sm:p-7">
         {status === "sent" ? (
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-sm">
-            <p className="text-base font-bold text-emerald-900">Thank you for your feedback</p>
+            <p className="text-base font-bold text-emerald-900">{t("forms.fSentTitle")}</p>
             <p className="mt-1 text-emerald-700">
-              Reference <span className="font-mono font-bold">{reference || "SSS-REF"}</span>. We value your time in helping us improve.
+              {t("forms.refLabel")} <span className="font-mono font-bold">{reference || "SSS-REF"}</span>. {t("forms.fSentDesc")}
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} noValidate className="grid gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="grid gap-1.5">
-                <Label htmlFor="fb-name">Your Name</Label>
-                <Input id="fb-name" value={form.name} onChange={set("name")} placeholder="Full name" required aria-invalid={!!errors.name} autoComplete="name" />
+                <Label htmlFor="fb-name">{t("forms.name")}</Label>
+                <Input id="fb-name" value={form.name} onChange={set("name")} placeholder={t("forms.namePh")} required aria-invalid={!!errors.name} autoComplete="name" />
                 {errors.name ? <p className="text-xs font-medium text-red-600">{errors.name}</p> : null}
               </div>
               <div className="grid gap-1.5">
-                <Label htmlFor="fb-phone">Mobile Number</Label>
-                <Input id="fb-phone" type="tel" inputMode="numeric" maxLength={12} value={form.phone} onChange={set("phone")} placeholder="10-digit number" required aria-invalid={!!errors.phone} autoComplete="tel" />
+                <Label htmlFor="fb-phone">{t("forms.phone")}</Label>
+                <Input id="fb-phone" type="tel" inputMode="numeric" maxLength={12} value={form.phone} onChange={set("phone")} placeholder={t("forms.phonePh")} required aria-invalid={!!errors.phone} autoComplete="tel" />
                 {errors.phone ? <p className="text-xs font-medium text-red-600">{errors.phone}</p> : null}
               </div>
             </div>
 
             <div className="grid gap-1.5">
-              <Label htmlFor="fb-email">Email (optional)</Label>
-              <Input id="fb-email" type="email" value={form.email} onChange={set("email")} placeholder="you@example.com" aria-invalid={!!errors.email} autoComplete="email" />
+              <Label htmlFor="fb-email">{t("forms.emailOpt")}</Label>
+              <Input id="fb-email" type="email" value={form.email} onChange={set("email")} placeholder={t("forms.emailPh")} aria-invalid={!!errors.email} autoComplete="email" />
               {errors.email ? <p className="text-xs font-medium text-red-600">{errors.email}</p> : null}
             </div>
 
             <fieldset className="grid gap-2">
               <legend className="text-sm font-medium text-foreground">
-                How was your experience?
+                {t("forms.exp")}
               </legend>
               <div className="flex items-center gap-1.5">
                 {[1, 2, 3, 4, 5].map((n) => (
@@ -119,15 +126,15 @@ export function FeedbackForm({ className }: { className?: string }) {
                   </button>
                 ))}
                 <span className="ml-2 text-sm font-semibold text-navy">
-                  {form.rating ? starLabels[form.rating - 1] : "Tap to rate"}
+                  {form.rating ? starLabels[form.rating - 1] : t("forms.tapToRate")}
                 </span>
               </div>
               {errors.rating ? <p className="text-xs font-medium text-red-600">{errors.rating}</p> : null}
             </fieldset>
 
             <div className="grid gap-1.5">
-              <Label htmlFor="fb-message">Your Feedback</Label>
-              <Textarea id="fb-message" rows={4} value={form.message} onChange={set("message")} placeholder="How was the part quality, pricing, delivery, or customer support?" required aria-invalid={!!errors.message} />
+              <Label htmlFor="fb-message">{t("forms.fMsg")}</Label>
+              <Textarea id="fb-message" rows={4} value={form.message} onChange={set("message")} placeholder={t("forms.fMsgPh")} required aria-invalid={!!errors.message} />
               {errors.message ? <p className="text-xs font-medium text-red-600">{errors.message}</p> : null}
             </div>
 
@@ -137,11 +144,11 @@ export function FeedbackForm({ className }: { className?: string }) {
 
             <Button type="submit" disabled={status === "submitting"} className="w-full bg-royal text-white hover:bg-royal/90 sm:max-w-xs">
               <Send className="size-4" aria-hidden />
-              {status === "submitting" ? "Sending…" : "Submit Feedback"}
+              {status === "submitting" ? t("common.sending") : t("forms.fSubmit")}
             </Button>
             <p className="flex items-center gap-1.5 text-[11.5px] text-muted-text">
               <ShieldCheck className="size-3.5 text-emerald-600" aria-hidden />
-              Used strictly for service quality improvement.
+              {t("forms.fHint")}
             </p>
           </form>
         )}

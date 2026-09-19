@@ -9,6 +9,7 @@ import {
   feedbackSchema,
   utrSchema,
   productSchema,
+  emailMessageSchema,
   parseError,
 } from "@/lib/validation";
 
@@ -221,5 +222,46 @@ describe("parseError", () => {
       expect(Object.keys(errors).length).toBeGreaterThanOrEqual(1);
       expect(errors.phone).toBeDefined();
     }
+  });
+});
+
+describe("emailMessageSchema", () => {
+  it("accepts a valid email message with all fields", () => {
+    const parsed = emailMessageSchema.safeParse({
+      name: "Arun",
+      phone: "9876543210",
+      email: "arun@example.com",
+      message: "Hi, I need a bumper for my 2016 i20.",
+    });
+    expect(parsed.success).toBe(true);
+  });
+
+  it("defaults optional fields to empty strings", () => {
+    const parsed = emailMessageSchema.safeParse({
+      name: "Kumar",
+      message: "Do you have tail lamps?",
+    });
+    expect(parsed.success).toBe(true);
+    if (parsed.success) {
+      expect(parsed.data.phone).toBe("");
+      expect(parsed.data.email).toBe("");
+    }
+  });
+
+  it("rejects a message shorter than 10 characters", () => {
+    const parsed = emailMessageSchema.safeParse({
+      name: "Arun",
+      message: "Short",
+    });
+    expect(parsed.success).toBe(false);
+  });
+
+  it("rejects an invalid email address format", () => {
+    const parsed = emailMessageSchema.safeParse({
+      name: "Arun",
+      email: "not-an-email",
+      message: "Please reply to my enquiry.",
+    });
+    expect(parsed.success).toBe(false);
   });
 });

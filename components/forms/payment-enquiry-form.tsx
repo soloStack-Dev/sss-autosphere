@@ -10,20 +10,29 @@ import { paymentEnquirySchema, parseError } from "@/lib/validation";
 import { normalizePhone } from "@/lib/utils";
 import { waLink, whatsappDesks, paymentEnquiryMessage } from "@/lib/whatsapp";
 import { useUIStore } from "@/store/ui-store";
+import { useT } from "@/lib/i18n";
 import { Send, ShieldCheck } from "lucide-react";
 
 type Errors = Record<string, string>;
 
 const enquiryTypes = [
-  { value: "payment-method", label: "Payment method help" },
-  { value: "transaction", label: "Transaction not received" },
-  { value: "refund", label: "Refund / cancellation" },
-  { value: "invoice", label: "Invoice & billing" },
-  { value: "other", label: "Other payment query" },
+  { value: "payment-method", labelKey: "payment-method" },
+  { value: "transaction", labelKey: "transaction" },
+  { value: "refund", labelKey: "refund" },
+  { value: "invoice", labelKey: "invoice" },
+  { value: "other", labelKey: "other" },
 ];
 
 export function PaymentEnquiryForm({ className }: { className?: string }) {
   const pushToast = useUIStore((s) => s.pushToast);
+  const t = useT();
+  const pTypes = [
+    t("forms.pTypes.0"),
+    t("forms.pTypes.1"),
+    t("forms.pTypes.2"),
+    t("forms.pTypes.3"),
+    t("forms.pTypes.4"),
+  ];
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -67,19 +76,22 @@ export function PaymentEnquiryForm({ className }: { className?: string }) {
       });
       const json = (await res.json()) as { ok: boolean; reference?: string; error?: string };
       if (!res.ok || !json.ok) {
-        setErrors({ _root: json.error ?? "Something went wrong. Try again." });
+        setErrors({ _root: json.error ?? t("forms.waErr") });
         setStatus("error");
         return;
       }
       setReference(json.reference ?? "");
       setStatus("sent");
       pushToast({
-        title: "Payment ticket sent to WhatsApp",
-        description: `Reference ${json.reference ?? ""} — the billing desk will resolve your query.`,
+        title: t("toasts.paymentSent"),
+        description: t("toasts.paymentSentDesc").replace(
+          "{ref}",
+          json.reference ?? "",
+        ),
         tone: "success",
       });
     } catch {
-      setErrors({ _root: "Network error. Please try again." });
+      setErrors({ _root: t("forms.netErr") });
       setStatus("error");
     }
   }
@@ -89,51 +101,51 @@ export function PaymentEnquiryForm({ className }: { className?: string }) {
       <div className="rounded-2xl border border-line bg-white p-5 shadow-card sm:p-7">
         {status === "sent" ? (
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-sm">
-            <p className="text-base font-bold text-emerald-900">Payment ticket sent to WhatsApp</p>
+            <p className="text-base font-bold text-emerald-900">{t("forms.pfSentTitle")}</p>
             <p className="mt-1 text-emerald-700">
-              Reference <span className="font-mono font-bold">{reference || "SSS-REF"}</span>. Our billing desk will verify and respond.
+              {t("forms.refLabel")} <span className="font-mono font-bold">{reference || "SSS-REF"}</span>. {t("forms.pfSentDesc")}
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} noValidate className="grid gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="grid gap-1.5">
-                <Label htmlFor="pf-name">Your Name</Label>
-                <Input id="pf-name" value={form.name} onChange={set("name")} placeholder="Full name" required aria-invalid={!!errors.name} autoComplete="name" />
+                <Label htmlFor="pf-name">{t("forms.name")}</Label>
+                <Input id="pf-name" value={form.name} onChange={set("name")} placeholder={t("forms.namePh")} required aria-invalid={!!errors.name} autoComplete="name" />
                 {errors.name ? <p className="text-xs font-medium text-red-600">{errors.name}</p> : null}
               </div>
               <div className="grid gap-1.5">
-                <Label htmlFor="pf-phone">Mobile Number</Label>
-                <Input id="pf-phone" type="tel" inputMode="numeric" maxLength={12} value={form.phone} onChange={set("phone")} placeholder="10-digit number" required aria-invalid={!!errors.phone} autoComplete="tel" />
+                <Label htmlFor="pf-phone">{t("forms.phone")}</Label>
+                <Input id="pf-phone" type="tel" inputMode="numeric" maxLength={12} value={form.phone} onChange={set("phone")} placeholder={t("forms.phonePh")} required aria-invalid={!!errors.phone} autoComplete="tel" />
                 {errors.phone ? <p className="text-xs font-medium text-red-600">{errors.phone}</p> : null}
               </div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="grid gap-1.5">
-                <Label htmlFor="pf-type">Enquiry Type</Label>
+                <Label htmlFor="pf-type">{t("forms.pType")}</Label>
                 <Select id="pf-type" value={form.enquiryType} onChange={set("enquiryType")}>
-                  {enquiryTypes.map((t) => (
-                    <option key={t.value} value={t.value}>{t.label}</option>
+                  {enquiryTypes.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{pTypes[enquiryTypes.indexOf(opt)] ?? opt.value}</option>
                   ))}
                 </Select>
               </div>
               <div className="grid gap-1.5">
-                <Label htmlFor="pf-utr">UTR / Reference (optional)</Label>
-                <Input id="pf-utr" value={form.utr} onChange={set("utr")} placeholder="e.g. UTR139123456789" aria-invalid={!!errors.utr} />
+                <Label htmlFor="pf-utr">{t("forms.utr")}</Label>
+                <Input id="pf-utr" value={form.utr} onChange={set("utr")} placeholder={t("forms.utrPh")} aria-invalid={!!errors.utr} />
                 {errors.utr ? <p className="text-xs font-medium text-red-600">{errors.utr}</p> : null}
               </div>
             </div>
 
             <div className="grid gap-1.5">
-              <Label htmlFor="pf-email">Email (optional)</Label>
-              <Input id="pf-email" type="email" value={form.email} onChange={set("email")} placeholder="you@example.com" aria-invalid={!!errors.email} autoComplete="email" />
+              <Label htmlFor="pf-email">{t("forms.emailOpt")}</Label>
+              <Input id="pf-email" type="email" value={form.email} onChange={set("email")} placeholder={t("forms.emailPh")} aria-invalid={!!errors.email} autoComplete="email" />
               {errors.email ? <p className="text-xs font-medium text-red-600">{errors.email}</p> : null}
             </div>
 
             <div className="grid gap-1.5">
-              <Label htmlFor="pf-message">Describe Your Query</Label>
-              <Textarea id="pf-message" rows={4} value={form.message} onChange={set("message")} placeholder="Paid on [date] via [method], amount ₹…, transaction screenshot attached…" required aria-invalid={!!errors.message} />
+              <Label htmlFor="pf-message">{t("forms.pDescribe")}</Label>
+              <Textarea id="pf-message" rows={4} value={form.message} onChange={set("message")} placeholder={t("forms.pDescribePh")} required aria-invalid={!!errors.message} />
               {errors.message ? <p className="text-xs font-medium text-red-600">{errors.message}</p> : null}
             </div>
 
@@ -143,11 +155,11 @@ export function PaymentEnquiryForm({ className }: { className?: string }) {
 
             <Button type="submit" disabled={status === "submitting"} className="w-full bg-royal text-white hover:bg-royal/90 sm:max-w-xs">
               <Send className="size-4" aria-hidden />
-              {status === "submitting" ? "Sending…" : "Raise Payment Ticket"}
+              {status === "submitting" ? t("common.sending") : t("forms.pfSubmit")}
             </Button>
             <p className="flex items-center gap-1.5 text-[11.5px] text-muted-text">
               <ShieldCheck className="size-3.5 text-emerald-600" aria-hidden />
-              Opens WhatsApp with a structured message. Never share PINs, OTPs, or passwords.
+              {t("forms.pfWaHint")}
             </p>
           </form>
         )}

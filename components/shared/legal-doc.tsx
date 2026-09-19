@@ -9,7 +9,7 @@ export function LegalDoc({
   title: string;
   eyebrow: string;
   updated: string;
-  sections: Array<{ heading: string; body: string }>;
+  sections: Array<{ heading: string; body: React.ReactNode }>;
 }) {
   return (
     <section className="section-pad bg-white">

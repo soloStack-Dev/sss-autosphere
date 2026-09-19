@@ -22,6 +22,13 @@ export const siteConfig = {
   location: "Chennai, TN",
   proprietor: "[Confirm preferred display name]",
 
+  // Shop location on the map (resolved from the official Google Maps pin)
+  map: {
+    lat: 13.067521,
+    lng: 80.266244,
+    googleMapsUrl: "https://maps.app.goo.gl/dqu699UH7SMekGsV9",
+  },
+
   topBar: {
     left: "9840527931 • Chennai, TN",
     hours: "Hours: 9:00 am to 9:00 pm - Tamil Support",

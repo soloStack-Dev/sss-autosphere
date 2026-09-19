@@ -23,6 +23,26 @@ export const nameSchema = z
   .min(2, "Your name must be at least 2 characters")
   .max(120, "Name is too long");
 
+/** Message sent to the shop owner from the email popup. */
+export const emailMessageSchema = z.object({
+  name: nameSchema,
+  phone: z
+    .string()
+    .trim()
+    .refine(
+      (v) => v === "" || /^[6-9]\d{9}$/.test(v.replace(/[\s-]/g, "")),
+      { message: "Enter a valid 10-digit Indian mobile number" },
+    )
+    .default(""),
+  email: emailSchema.default(""),
+  message: z
+    .string()
+    .trim()
+    .min(10, "Please write at least 10 characters")
+    .max(3000, "Message is too long"),
+});
+export type EmailMessageInput = z.infer<typeof emailMessageSchema>;
+
 /** Quick home / drawer enquiry. */
 export const enquirySchema = z.object({
   vehicle: z

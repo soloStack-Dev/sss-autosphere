@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { galleryCategories, type GalleryItem } from "@/lib/data/gallery";
+import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Camera, Grid2X2, Image as ImageIcon, FolderOpen, Backpack, Building, Wrench, Users } from "lucide-react";
 
@@ -17,6 +18,7 @@ const categoryIcons: Record<string, React.ComponentType<{ className?: string }>>
 
 export function GalleryExplorer({ items }: { items: GalleryItem[] }) {
   const [active, setActive] = useState("all");
+  const t = useT();
 
   const visible = useMemo(
     () => (active === "all" ? items : items.filter((g) => g.category === active)),
@@ -25,7 +27,7 @@ export function GalleryExplorer({ items }: { items: GalleryItem[] }) {
 
   return (
     <div className="mt-8">
-      <div className="flex flex-wrap items-center gap-2" role="tablist" aria-label="Gallery categories">
+      <div className="flex flex-wrap items-center gap-2" role="tablist" aria-label={t("gallery.tabsAria")}>
         {galleryCategories.map((cat) => {
           const Icon = categoryIcons[cat.key] ?? ImageIcon;
           const selected = active === cat.key;
@@ -43,7 +45,7 @@ export function GalleryExplorer({ items }: { items: GalleryItem[] }) {
               )}
             >
               {Icon ? <Icon className="size-4" aria-hidden /> : null}
-              {cat.label}
+              {t(`gallery.cats.${cat.key}`) === `gallery.cats.${cat.key}` ? cat.label : t(`gallery.cats.${cat.key}`)}
               <span
                 className={cn(
                   "rounded-full px-1.5 text-[10.5px]",
@@ -73,7 +75,9 @@ export function GalleryExplorer({ items }: { items: GalleryItem[] }) {
               />
               <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-md bg-navy/85 px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wide text-white backdrop-blur">
                 <Camera className="size-3.5 text-orange-300" aria-hidden />
-                {item.category}
+                {t(`gallery.cats.${item.category}`) === `gallery.cats.${item.category}`
+                  ? item.category
+                  : t(`gallery.cats.${item.category}`)}
               </span>
             </div>
             <figcaption className="p-5">
@@ -90,7 +94,7 @@ export function GalleryExplorer({ items }: { items: GalleryItem[] }) {
 
       {visible.length === 0 ? (
         <p className="mt-6 rounded-2xl border border-dashed border-line bg-paleblue px-6 py-12 text-center text-sm text-body-text">
-          No images under this category — ask about facility photos on WhatsApp.
+          {t("gallery.emptyMsg")}
         </p>
       ) : null}
     </div>

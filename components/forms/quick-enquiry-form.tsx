@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { enquirySchema, parseError } from "@/lib/validation";
 import { useUIStore } from "@/store/ui-store";
+import { useT } from "@/lib/i18n";
 import { normalizePhone } from "@/lib/utils";
 import { waLink, whatsappDesks, quickEnquiryMessage } from "@/lib/whatsapp";
 import { Send, ShieldCheck } from "lucide-react";
@@ -21,6 +22,7 @@ export function QuickEnquiryForm({
   className?: string;
 }) {
   const pushToast = useUIStore((s) => s.pushToast);
+  const t = useT();
   const [vehicle, setVehicle] = useState("");
   const [part, setPart] = useState("");
   const [phone, setPhone] = useState("");
@@ -58,20 +60,23 @@ export function QuickEnquiryForm({
         error?: string;
       };
       if (!res.ok || !json.ok) {
-        setErrors({ _root: json.error ?? "Something went wrong. Try again." });
+        setErrors({ _root: json.error ?? t("forms.waErr") });
         setStatus("error");
         return;
       }
       setReference(json.reference ?? "");
       setStatus("sent");
       pushToast({
-        title: "Enquiry sent to WhatsApp",
-        description: `Reference ${json.reference ?? ""} — our Chennai desk will follow up.`,
+        title: t("toasts.enquirySent"),
+        description: t("toasts.enquirySentDesc").replace(
+          "{ref}",
+          json.reference ?? "",
+        ),
         tone: "success",
       });
       onSubmitted?.();
     } catch {
-      setErrors({ _root: "Network error. Please try again." });
+      setErrors({ _root: t("forms.netErr") });
       setStatus("error");
     }
   }
@@ -80,10 +85,10 @@ export function QuickEnquiryForm({
     return (
       <div className={className}>
         <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm">
-          <p className="font-semibold text-emerald-800">Enquiry sent to WhatsApp</p>
+          <p className="font-semibold text-emerald-800">{t("forms.qSentTitle")}</p>
           <p className="mt-1 text-emerald-700">
-            Reference <span className="font-mono font-bold">{reference || "SSS-REF"}</span>.
-            Our desk got your details — we usually respond during business hours.
+            {t("forms.refLabel")} <span className="font-mono font-bold">{reference || "SSS-REF"}</span>.{" "}
+            {t("forms.qSentDesc")}
           </p>
         </div>
       </div>
@@ -94,13 +99,13 @@ export function QuickEnquiryForm({
     <form onSubmit={handleSubmit} noValidate className={className}>
       <div className="grid gap-3">
         <div className="grid gap-1.5">
-          <Label htmlFor="qe-vehicle">Vehicle Make &amp; Model</Label>
+          <Label htmlFor="qe-vehicle">{t("forms.qvLabel")}</Label>
           <Input
             id="qe-vehicle"
             name="vehicle"
             value={vehicle}
             onChange={(e) => setVehicle(e.target.value)}
-            placeholder="e.g. Maruti Swift VXi 2020"
+            placeholder={t("forms.qvPh")}
             required
             aria-invalid={!!errors.vehicle}
           />
@@ -110,13 +115,13 @@ export function QuickEnquiryForm({
         </div>
 
         <div className="grid gap-1.5">
-          <Label htmlFor="qe-part">Required Part / Service</Label>
+          <Label htmlFor="qe-part">{t("forms.qpLabel")}</Label>
           <Textarea
             id="qe-part"
             name="part"
             value={part}
             onChange={(e) => setPart(e.target.value)}
-            placeholder="e.g. Front left brake caliper (OEM / best price)"
+            placeholder={t("forms.qpPh")}
             rows={3}
             required
             aria-invalid={!!errors.part}
@@ -127,7 +132,7 @@ export function QuickEnquiryForm({
         </div>
 
         <div className="grid gap-1.5">
-          <Label htmlFor="qe-phone">WhatsApp / Mobile Number</Label>
+          <Label htmlFor="qe-phone">{t("forms.qphoneLabel")}</Label>
           <Input
             id="qe-phone"
             name="phone"
@@ -136,7 +141,7 @@ export function QuickEnquiryForm({
             maxLength={12}
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            placeholder="10-digit mobile number"
+            placeholder={t("forms.qphonePh")}
             required
             aria-invalid={!!errors.phone}
           />
@@ -157,12 +162,12 @@ export function QuickEnquiryForm({
           className="mt-1 w-full bg-royal text-white hover:bg-royal/90"
         >
           <Send className="size-4" aria-hidden />
-          {status === "submitting" ? "Sending…" : "Submit Enquiry"}
+          {status === "submitting" ? t("common.sending") : t("forms.qSubmit")}
         </Button>
 
         <p className="flex items-center justify-center gap-1.5 text-center text-[11.5px] text-muted-text">
           <ShieldCheck className="size-3.5 text-emerald-600" aria-hidden />
-          Opens WhatsApp with your details pre-filled — no spam.
+          {t("forms.qWaHint")}
         </p>
       </div>
     </form>

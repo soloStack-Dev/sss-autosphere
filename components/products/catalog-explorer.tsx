@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/ui-store";
+import { useT } from "@/lib/i18n";
 import { Empty } from "@/components/products/empty";
 import { ProductCreateDialog } from "@/components/products/product-create-dialog";
 import { Search, PackageSearch, SlidersHorizontal, Plus } from "lucide-react";
@@ -34,6 +35,7 @@ type Props = {
 
 export function CatalogExplorer({ initialProducts, canRefresh }: Props) {
   const openEnquiryDrawer = useUIStore((s) => s.openEnquiryDrawer);
+  const t = useT();
   const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
   const [filters, setFilters] = useState<Filters>({
@@ -98,18 +100,24 @@ export function CatalogExplorer({ initialProducts, canRefresh }: Props) {
     ]);
   };
 
+  const catLabel = (id: string, fallback: string) => {
+    const key = `cx.cats.${id}`;
+    const value = t(key);
+    return value === key ? fallback : value;
+  };
+
   return (
     <div className="mt-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm font-semibold text-muted-text">
-          Filter by category
+          {t("cx.filterBy")}
         </p>
         <Button
           onClick={() => setCreateOpen(true)}
           className="inline-flex items-center gap-1.5 bg-royal px-4 text-white hover:bg-royal/90"
         >
           <Plus className="size-4" aria-hidden />
-          Add New
+          {t("products.addNew")}
         </Button>
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -127,7 +135,7 @@ export function CatalogExplorer({ initialProducts, canRefresh }: Props) {
                   : "border-line bg-white text-navy hover:border-royal/40 hover:text-royal",
               )}
             >
-              {cat.title}
+              {cat.id === "all" ? t("products.resetAll") : catLabel(cat.id, cat.title)}
             </button>
           );
         })}
@@ -139,22 +147,22 @@ export function CatalogExplorer({ initialProducts, canRefresh }: Props) {
           <Input
             value={filters.search}
             onChange={set("search")}
-            placeholder="Search by part, SKU, or description…"
+            placeholder={t("cx.searchPh")}
             className="h-9 pl-9 bg-white"
-            aria-label="Search parts"
+            aria-label={t("cx.searchLabel")}
           />
         </label>
-        <Select value={filters.brand} onChange={set("brand")} className="h-9 bg-white" aria-label="Filter by brand">
+        <Select value={filters.brand} onChange={set("brand")} className="h-9 bg-white" aria-label={t("cx.brandLabel")}>
           {brandOptions.map((b) => (
             <option key={b} value={b}>{b}</option>
           ))}
         </Select>
-        <Select value={filters.condition} onChange={set("condition")} className="h-9 bg-white" aria-label="Filter by condition">
+        <Select value={filters.condition} onChange={set("condition")} className="h-9 bg-white" aria-label={t("cx.condLabel")}>
           {conditionOptions.map((c) => (
             <option key={c} value={c}>{c}</option>
           ))}
         </Select>
-        <Select value={filters.vehicleType} onChange={set("vehicleType")} className="h-9 bg-white" aria-label="Filter by vehicle type">
+        <Select value={filters.vehicleType} onChange={set("vehicleType")} className="h-9 bg-white" aria-label={t("cx.typeLabel")}>
           {vehicleTypeOptions.map((v) => (
             <option key={v} value={v}>{v}</option>
           ))}
@@ -164,11 +172,11 @@ export function CatalogExplorer({ initialProducts, canRefresh }: Props) {
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
         <p className="flex items-center gap-1.5 text-sm font-semibold text-muted-text">
           <SlidersHorizontal className="size-4 text-royal" aria-hidden />
-          Showing <span className="font-extrabold text-navy">{filtered.length}</span> of {products.length} items
+          {t("cx.showing")} <span className="font-extrabold text-navy">{filtered.length}</span> {t("cx.of")} {products.length} {t("cx.items")}
         </p>
         {filtered.length === 0 ? null : (
           <Button variant="outline" size="sm" onClick={reset} className="border-line text-navy">
-            Reset Filters
+            {t("cx.reset")}
           </Button>
         )}
       </div>
@@ -204,15 +212,15 @@ export function CatalogExplorer({ initialProducts, canRefresh }: Props) {
                 <p className="mt-2 flex-1 text-[13px] leading-relaxed text-body-text">{p.description}</p>
                 <dl className="mt-4 space-y-1.5 border-t border-line pt-3 text-[12.5px]">
                   <div className="flex justify-between gap-2">
-                    <dt className="font-semibold text-muted-text">Fitment</dt>
+                    <dt className="font-semibold text-muted-text">{t("cx.fitment")}</dt>
                     <dd className="text-right font-semibold text-navy">{p.vehicleCompatibility}</dd>
                   </div>
                   <div className="flex justify-between gap-2">
-                    <dt className="font-semibold text-muted-text">Status</dt>
+                    <dt className="font-semibold text-muted-text">{t("cx.status")}</dt>
                     <dd className="font-semibold text-navy">{p.stockStatus}</dd>
                   </div>
                   <div className="flex justify-between gap-2">
-                    <dt className="font-semibold text-muted-text">Price</dt>
+                    <dt className="font-semibold text-muted-text">{t("cx.price")}</dt>
                     <dd className="font-semibold text-royal">{p.price}</dd>
                   </div>
                 </dl>
@@ -221,10 +229,10 @@ export function CatalogExplorer({ initialProducts, canRefresh }: Props) {
                     openEnquiryDrawer()
                   }
                   className="mt-4 w-full bg-royal text-white hover:bg-royal/90"
-                  aria-label={`Enquire about ${p.name}`}
+                  aria-label={t("cx.askAria").replace("{part}", p.name)}
                 >
                   <PackageSearch className="size-4" aria-hidden />
-                  Ask About This Part
+                  {t("cx.ask")}
                 </Button>
               </div>
             </article>

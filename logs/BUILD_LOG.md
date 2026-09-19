@@ -88,3 +88,18 @@ Partial prerender: `/protected`, `/auth/error`
   touchmove prevented, `[data-scrollable]` exempts the panel itself).
 - TS fixes during work: toast tone only allows error/success/info (no
   "warning"); dragRef baseX/baseY spread bug. Build, lint, tests green (41).
+
+## Update (2026-09-18) — Email-the-shop popup (Resend)
+- Added `resend@6.28.1` (user-installed). `RESEND_API_KEY` moved into
+  `.env.local` (gitignored); `.env.example` scrubbed to placeholders —
+  the earlier committed `.env.example` leaked the Supabase DB password and
+  service key (rotate them!).
+- New `POST /api/send-email` (zod `emailMessageSchema`) sends via Resend to
+  `siteConfig.email`, with `replyTo` = visitor email. Returns 503 if the
+  key is missing, 400 on validation errors.
+- New `EmailDialog` (popup: name, phone, email, message, success state) —
+  mounted once in `SiteProviders`. All email mentions (footer, enquire page
+  x2, privacy policy) now render as buttons that open the dialog.
+- `emailMessageSchema` + 4 tests added (45 tests total).
+- Fix during work: `export const runtime` is route segment config —
+  forbidden under `cacheComponents`, removed. Build, lint, tests green (45).

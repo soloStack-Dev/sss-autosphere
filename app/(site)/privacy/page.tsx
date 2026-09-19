@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LegalDoc } from "@/components/shared/legal-doc";
+import { EmailContact } from "@/components/shared/email-contact";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -32,7 +33,18 @@ export default function PrivacyPage() {
         },
         {
           heading: "5. Your Rights",
-          body: `You may request a copy of, correction to, or deletion of your data by contacting ${siteConfig.email}.`,
+          body: (
+            <>
+              You may request a copy of, correction to, or deletion of your data
+              by contacting{" "}
+              <EmailContact
+                email={siteConfig.email}
+                showIcon={false}
+                className="text-[14px] font-bold text-royal underline"
+              />
+              .
+            </>
+          ),
         },
         {
           heading: "6. Security Notice",

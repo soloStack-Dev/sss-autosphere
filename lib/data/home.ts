@@ -116,6 +116,24 @@ export const services = [
   },
 ];
 
+export const specialisations = [
+  { id: "four-wheeler", label: "Four-Wheeler Spare Parts", emoji: "\uD83D\uDD29" },
+  { id: "body-parts", label: "Car Body Parts", emoji: "\uD83D\uDE98" },
+  { id: "old-parts", label: "Old Four-Wheeler Spare Parts", emoji: "\u267B\uFE0F" },
+  { id: "second-hand", label: "Second-Hand Car Spare Parts", emoji: "\uD83D\uDD27" },
+  { id: "quality", label: "Quality Replacement Parts", emoji: "\u2699\uFE0F" },
+  { id: "solutions", label: "Automobile Spare Parts Solutions", emoji: "\uD83E\uDDF0" },
+];
+
+export const brands = [
+  "Ford",
+  "Toyota",
+  "Hyundai",
+  "Volkswagen",
+  "Fiat",
+  "Tata",
+];
+
 export const trustMetrics = [
   {
     icon: "box",

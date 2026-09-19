@@ -11,6 +11,7 @@ import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/ui-store";
+import { useT } from "@/lib/i18n";
 import {
   X,
   PackagePlus,
@@ -72,6 +73,7 @@ export function ProductCreateDialog({
   onCreated: (product: Product) => void;
 }) {
   const pushToast = useUIStore((s) => s.pushToast);
+  const t = useT();
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "submitting">("idle");
@@ -109,7 +111,7 @@ export function ProductCreateDialog({
 
   function pickImage(file: File) {
     if (!file.type.startsWith("image/")) {
-      setErrors((e) => ({ ...e, image: "Choose an image file (JPG/PNG/WebP)." }));
+      setErrors((e) => ({ ...e, image: t("pcd.badImage") }));
       return;
     }
     const reader = new FileReader();
@@ -135,11 +137,11 @@ export function ProductCreateDialog({
       const message =
         (error as { message?: string }).message || "";
       const hint = message.toLowerCase().includes("not found")
-        ? "The product-images storage bucket is missing — run the updated migration SQL in Supabase."
+        ? t("pcd.bucketMissing")
         : message.toLowerCase().includes("row level security")
-          ? "Image upload is blocked by storage permissions — check the bucket policies in the migration."
-          : "Image upload failed. The part will be saved without the photo.";
-      pushToast({ title: "Image not uploaded", description: hint, tone: "info" });
+          ? t("pcd.permsBlocked")
+          : t("pcd.uploadFail");
+      pushToast({ title: t("pcd.notUploaded"), description: hint, tone: "info" });
       return form.image;
     }
     const { data } = supabase.storage.from("product-images").getPublicUrl(path);
@@ -174,7 +176,7 @@ export function ProductCreateDialog({
         error?: string;
       };
       if (!res.ok || !json.ok || !json.product) {
-        setErrors({ _root: json.error ?? "Could not save the part. Try again." });
+        setErrors({ _root: json.error ?? t("pcd.saveFail") });
         return;
       }
       onCreated(json.product);
@@ -184,12 +186,14 @@ export function ProductCreateDialog({
       setStatus("idle");
       onOpenChange(false);
       pushToast({
-        title: "Part added to catalogue",
-        description: `${json.product.name} (${json.product.sku}) is now listed.`,
+        title: t("pcd.savedTitle"),
+        description: t("pcd.savedDesc")
+          .replace("{name}", json.product.name)
+          .replace("{sku}", json.product.sku),
         tone: "success",
       });
     } catch {
-      setErrors({ _root: "Network error. Please try again." });
+      setErrors({ _root: t("forms.netErr") });
       setStatus("idle");
     }
   }
@@ -227,7 +231,7 @@ export function ProductCreateDialog({
       }}
       role="dialog"
       aria-modal="true"
-      aria-label="Add a new part to the catalogue"
+      aria-label={t("pcd.dialogAria")}
     >
 <div
           ref={panelRef}
@@ -244,19 +248,19 @@ export function ProductCreateDialog({
           <div>
             <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.18em] text-royal">
               <GripHorizontal className="size-4" aria-hidden />
-              New Catalogue Entry
+              {t("pcd.eyebrow")}
             </p>
             <h2 className="mt-1 text-xl font-extrabold text-navy">
-              Add a New Part
+              {t("pcd.title")}
             </h2>
             <p className="mt-1 text-sm text-body-text">
-              Drag this header to move the panel — the page behind stays scrollable.
+              {t("pcd.dragHint")}
             </p>
           </div>
           <button
             type="button"
             onClick={() => onOpenChange(false)}
-            aria-label="Close dialog"
+            aria-label={t("pcd.closeAria")}
             className="rounded-lg border border-line p-2 text-navy transition-colors hover:bg-softblue"
           >
             <X className="size-4" aria-hidden />
@@ -266,12 +270,12 @@ export function ProductCreateDialog({
         <form onSubmit={handleSubmit} noValidate className="mt-6 grid gap-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-1.5">
-              <Label htmlFor="newp-sku">SKU / Part Number</Label>
+              <Label htmlFor="newp-sku">{t("pcd.sku")}</Label>
               <Input
                 id="newp-sku"
                 value={form.sku}
                 onChange={set("sku")}
-                placeholder="e.g. HLP-8920"
+                placeholder={t("pcd.skuPh")}
                 required
                 aria-invalid={!!errors.sku}
               />
@@ -280,12 +284,12 @@ export function ProductCreateDialog({
               ) : null}
             </div>
             <div className="grid gap-1.5">
-              <Label htmlFor="newp-name">Part Name</Label>
+              <Label htmlFor="newp-name">{t("pcd.partName")}</Label>
               <Input
                 id="newp-name"
                 value={form.name}
                 onChange={set("name")}
-                placeholder="e.g. Dual Projector Headlamp Assembly"
+                placeholder={t("pcd.partNamePh")}
                 required
                 aria-invalid={!!errors.name}
               />
@@ -297,13 +301,13 @@ export function ProductCreateDialog({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-1.5">
-              <Label htmlFor="newp-category">Category</Label>
+              <Label htmlFor="newp-category">{t("pcd.category")}</Label>
               <Input
                 id="newp-category"
                 list="newp-category-list"
                 value={form.category}
                 onChange={set("category")}
-                placeholder="e.g. LIGHTING & ELECTRICAL"
+                placeholder={t("pcd.categoryPh")}
                 required
                 aria-invalid={!!errors.category}
               />
@@ -317,7 +321,7 @@ export function ProductCreateDialog({
               ) : null}
             </div>
             <div className="grid gap-1.5">
-              <Label htmlFor="newp-condition">Condition</Label>
+              <Label htmlFor="newp-condition">{t("pcd.condition")}</Label>
               <Select
                 id="newp-condition"
                 value={form.condition}
@@ -337,12 +341,12 @@ export function ProductCreateDialog({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-1.5">
-              <Label htmlFor="newp-fitment">Fitment</Label>
+              <Label htmlFor="newp-fitment">{t("pcd.fitment")}</Label>
               <Input
                 id="newp-fitment"
                 value={form.vehicleCompatibility}
                 onChange={set("vehicleCompatibility")}
-                placeholder="e.g. [Confirm Fitment]"
+                placeholder={t("pcd.fitmentPh")}
                 required
                 aria-invalid={!!errors.vehicleCompatibility}
               />
@@ -351,12 +355,12 @@ export function ProductCreateDialog({
               ) : null}
             </div>
             <div className="grid gap-1.5">
-              <Label htmlFor="newp-price">Price</Label>
+              <Label htmlFor="newp-price">{t("pcd.price")}</Label>
               <Input
                 id="newp-price"
                 value={form.price}
                 onChange={set("price")}
-                placeholder="e.g. Contact for Price"
+                placeholder={t("pcd.pricePh")}
                 required
                 aria-invalid={!!errors.price}
               />
@@ -368,12 +372,12 @@ export function ProductCreateDialog({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-1.5">
-              <Label htmlFor="newp-status">Status</Label>
+              <Label htmlFor="newp-status">{t("pcd.status")}</Label>
               <Input
                 id="newp-status"
                 value={form.stockStatus}
                 onChange={set("stockStatus")}
-                placeholder="e.g. Enquire for Availability"
+                placeholder={t("pcd.statusPh")}
                 required
                 aria-invalid={!!errors.stockStatus}
               />
@@ -382,12 +386,12 @@ export function ProductCreateDialog({
               ) : null}
             </div>
             <div className="grid gap-1.5">
-              <Label htmlFor="newp-badge">Badge (optional)</Label>
+              <Label htmlFor="newp-badge">{t("pcd.badge")}</Label>
               <Input
                 id="newp-badge"
                 value={form.badge}
                 onChange={set("badge")}
-                placeholder="e.g. New"
+                placeholder={t("pcd.badgePh")}
                 aria-invalid={!!errors.badge}
               />
               {errors.badge ? (
@@ -397,7 +401,7 @@ export function ProductCreateDialog({
           </div>
 
           <div className="grid gap-1.5">
-            <Label>Device Image</Label>
+            <Label>{t("pcd.deviceImage")}</Label>
             <input
               ref={fileRef}
               type="file"
@@ -414,7 +418,7 @@ export function ProductCreateDialog({
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={imagePreview}
-                    alt="Selected product preview"
+                    alt={t("pcd.previewAlt")}
                     className="h-full w-full object-cover"
                   />
                 </div>
@@ -426,7 +430,7 @@ export function ProductCreateDialog({
                 className="border-line text-navy"
               >
                 <ImageUp className="size-4" aria-hidden />
-                {imagePreview ? "Change Image" : "Access Device Image"}
+                {imagePreview ? t("pcd.changeImage") : t("pcd.accessImage")}
               </Button>
               {imagePreview ? (
                 <Button
@@ -439,7 +443,7 @@ export function ProductCreateDialog({
                     if (fileRef.current) fileRef.current.value = "";
                   }}
                   className="border-line text-navy"
-                  aria-label="Remove image"
+                  aria-label={t("pcd.removeImage")}
                 >
                   <Trash2 className="size-4" aria-hidden />
                 </Button>
@@ -450,12 +454,12 @@ export function ProductCreateDialog({
             </div>
             <p className="text-[11.5px] text-muted-text">
               {imageFile
-                ? `Attached: ${imageFile.name}${
+                ? `${t("pcd.attached").replace("{name}", imageFile.name)}${
                     hasEnvVars
-                      ? " — uploaded to the product-images bucket on save."
-                      : " — preview only (dev mode, no storage configured)."
+                      ? t("pcd.uploadedOnSave")
+                      : t("pcd.previewOnly")
                   }`
-                : "Picks a photo from your device / camera. Uploaded to Supabase Storage when saving."}
+                : t("pcd.uploadHint")}
             </p>
             {errors.image ? (
               <p className="text-xs font-medium text-red-600">{errors.image}</p>
@@ -463,13 +467,13 @@ export function ProductCreateDialog({
           </div>
 
           <div className="grid gap-1.5">
-            <Label htmlFor="newp-description">Description</Label>
+            <Label htmlFor="newp-description">{t("pcd.description")}</Label>
             <Textarea
               id="newp-description"
               rows={4}
               value={form.description}
               onChange={set("description")}
-              placeholder="e.g. Modern dual-projector headlight unit with integrated turn-signal element and authentic mounting brackets."
+              placeholder={t("pcd.descriptionPh")}
               required
               aria-invalid={!!errors.description}
             />
@@ -491,7 +495,7 @@ export function ProductCreateDialog({
               onClick={() => onOpenChange(false)}
               className="border-line text-navy"
             >
-              Cancel
+              {t("pcd.cancel")}
             </Button>
             <Button
               type="submit"
@@ -503,7 +507,7 @@ export function ProductCreateDialog({
               ) : (
                 <PackagePlus className="size-4" aria-hidden />
               )}
-              {status === "submitting" ? "Saving…" : "Add New Part"}
+              {status === "submitting" ? t("pcd.saving") : t("pcd.save")}
             </Button>
           </div>
         </form>
