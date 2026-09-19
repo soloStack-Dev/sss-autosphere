@@ -9,6 +9,8 @@ import { SectionReveal } from "@/components/layout/section-reveal";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { VideoShowcase } from "@/components/shared/video-showcase";
 import { SpecialisationsBand } from "@/components/shared/specialisations-band";
+import { VehicleServicesBand } from "@/components/shared/vehicle-services-band";
+import { SocialIcons } from "@/components/shared/social-icons";
 import {
   ArrowRight,
   ShieldCheck,
@@ -294,6 +296,9 @@ export function HomeContent() {
         </div>
       </section>
 
+      {/* Vehicle buying lines */}
+      <VehicleServicesBand />
+
       {/* Services */}
       <section className="section-pad bg-paleblue">
         <div className="container-sss">
@@ -418,6 +423,10 @@ export function HomeContent() {
             >
               {t("common.paymentDetails")}
             </Link>
+            <SocialIcons
+              className="mt-1 w-full lg:w-auto lg:justify-end"
+              itemClassName="border border-white/15 bg-white/5 text-blue-100/85 hover:bg-royal hover:border-royal hover:text-white"
+            />
           </div>
         </div>
       </section>

@@ -157,5 +157,24 @@ Partial prerender: `/protected`, `/auth/error`
 - Verified: `GET /api/feedback` → `200` with the live row; lint/build/tests
   green (51).
 
+## Feature (2026-09-19) — Social links, products quick items, vehicle buying band
+- `lib/site-config.ts` `socials`: added `instagram` and `facebook` URLs (official
+  pages supplied by the owner).
+- New `components/shared/social-icons.tsx`: Instagram / Facebook / WhatsApp icon
+  buttons (open in new tab, `aria-label` per network), toneable via class props.
+- Social icons added to: footer contact column (under a `common.followUs`
+  label), home CTA band (dark band variant), and enquiry page "Prefer to talk?"
+  card.
+- Products "Find the Part You Need" section: added three quick-find cards
+  (`products.quickItems`) linking to `/enquire` with icon + title.
+- New `components/shared/vehicle-services-band.tsx` (3 cards driven by
+  `common.buyingLines`): placed after the Categories section on Home and after
+  "How we work" on About.
+- i18n: added `common.followUs`, `common.buyingLines[3]`, and
+  `products.quickItems[3]` to `en.ts`, `ta.ts`, `hi.ts`.
+- Verified: `bun run lint` EXIT=0, `bun run test --run` 51 passed (6 files),
+  `bun run build` EXIT=0 (23 routes). Confirmed the deleted feedback row is gone
+  from the live table (`select name` → `[]`); the UI sync drops it on next load.
+
 
 

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { siteConfig } from "@/lib/site-config";
 import { EmailContact } from "@/components/shared/email-contact";
+import { SocialIcons } from "@/components/shared/social-icons";
 import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { useT } from "@/lib/i18n";
 import {
@@ -118,6 +119,13 @@ export function SiteFooter() {
               {siteConfig.hours}
             </li>
           </ul>
+          <p className="mt-5 text-xs font-bold uppercase tracking-[0.14em] text-orange-300/80">
+            {t("common.followUs")}
+          </p>
+          <SocialIcons
+            className="mt-3"
+            itemClassName="bg-white/10 text-blue-100/80 hover:bg-royal hover:text-white"
+          />
         </div>
       </div>
 

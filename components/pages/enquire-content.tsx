@@ -1,12 +1,13 @@
 "use client";
 
-import { useCatalog } from "@/lib/i18n";
+import { useCatalog, useT } from "@/lib/i18n";
 import { PageBanner } from "@/components/shared/page-banner";
 import { SectionReveal } from "@/components/layout/section-reveal";
 import { QuickEnquiryForm } from "@/components/forms/quick-enquiry-form";
 import { PartEnquiryForm } from "@/components/forms/part-enquiry-form";
 import { LocationMap } from "@/components/enquire/location-map";
 import { EmailContact } from "@/components/shared/email-contact";
+import { SocialIcons } from "@/components/shared/social-icons";
 import { siteConfig } from "@/lib/site-config";
 import { waLink, whatsappDesks } from "@/lib/whatsapp";
 import { Phone, Clock, MessageCircle, ArrowUpRight, MapPin } from "lucide-react";
@@ -32,6 +33,7 @@ type EnquireCatalog = {
 };
 
 export function EnquireContent() {
+  const t = useT();
   const catalog = useCatalog();
   const enquire = catalog.enquire as EnquireCatalog;
   const nav = catalog.nav as { enquire: string };
@@ -102,6 +104,15 @@ export function EnquireContent() {
                   <ArrowUpRight className="size-3.5 text-royal" aria-hidden />
                   {enquire.languageSupport}
                 </p>
+                <div className="mt-5 border-t border-line pt-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-royal">
+                    {t("common.followUs")}
+                  </p>
+                  <SocialIcons
+                    className="mt-3"
+                    itemClassName="bg-paleblue text-navy hover:bg-royal hover:text-white"
+                  />
+                </div>
               </div>
             </div>
           </SectionReveal>

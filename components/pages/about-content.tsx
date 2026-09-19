@@ -8,6 +8,7 @@ import { PageBanner } from "@/components/shared/page-banner";
 import { SectionReveal } from "@/components/layout/section-reveal";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { SpecialisationsBand } from "@/components/shared/specialisations-band";
+import { VehicleServicesBand } from "@/components/shared/vehicle-services-band";
 import {
   ShieldCheck,
   BadgeCheck,
@@ -182,6 +183,9 @@ export function AboutContent() {
           </div>
         </div>
       </section>
+
+      {/* Vehicle buying lines */}
+      <VehicleServicesBand />
 
       {/* Stats + CTA */}
       <section className="relative overflow-hidden bg-footer-navy text-white">

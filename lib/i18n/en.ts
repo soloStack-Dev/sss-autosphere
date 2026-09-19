@@ -49,6 +49,12 @@ const en = {
     addNewPart: "Add New Part",
     back: "Back",
     breadcrumb: "Breadcrumb",
+    followUs: "Follow Us",
+    buyingLines: [
+      "Old Car Buying, Selling & All Spares Available",
+      "Four-Wheeler All Car Buying",
+      "Four-Wheeler Total Loss Vehicle, All Car Buying",
+    ],
   },
   hero: {
     badge: "Chennai's Trusted Auto-Spares Hub",
@@ -172,6 +178,11 @@ const en = {
     browseEyebrow: "Browse the Catalog",
     browseTitle: "Find the Part You Need",
     browseDesc: "Use the filters to narrow by category, brand, condition, or vehicle type. Prices are quoted per fitment by our Chennai desk.",
+    quickItems: [
+      "Car original all spares Available",
+      "Car Alaiwheel",
+      "Car Alaiwheel",
+    ],
     sourcingEyebrow: "Sourcing Standards",
     sourcingTitle: "Why Enquire Through SSS Auto Spares",
     sourcingDesc: "Because every part is backed by the same sourcing and verification discipline — whether new, OEM-grade, or bench-tested used.",

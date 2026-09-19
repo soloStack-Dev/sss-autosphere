@@ -47,6 +47,9 @@ export const siteConfig = {
 
   socials: {
     whatsapp: "https://wa.me/919840527931", // primary WhatsApp chat link
+    instagram:
+      "https://www.instagram.com/salaudeen2273?stkn=MXV1cWQ1OWNhcmxoMQ%3D%3D&utm_source=qr",
+    facebook: "https://www.facebook.com/share/1d6xVr83PV/?mibextid=wwXIfr",
   },
 
   description:

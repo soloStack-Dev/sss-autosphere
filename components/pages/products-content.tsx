@@ -2,19 +2,30 @@
 
 import type { Product } from "@/lib/data/products";
 import { useCatalog } from "@/lib/i18n";
+import Link from "next/link";
 import { PageBanner } from "@/components/shared/page-banner";
 import { SectionReveal } from "@/components/layout/section-reveal";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { CatalogExplorer } from "@/components/products/catalog-explorer";
 import { PartEnquiryForm } from "@/components/forms/part-enquiry-form";
 import { sourcingBenefits } from "@/lib/data/products";
-import { ShieldCheck, Clock, Wrench } from "lucide-react";
+import {
+  ShieldCheck,
+  Clock,
+  Wrench,
+  Sparkles,
+  Cog,
+  Disc,
+  ArrowRight,
+} from "lucide-react";
 
 const benefitIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   shield: ShieldCheck,
   clock: Clock,
   wrench: Wrench,
 };
+
+const quickItemIcons = [Sparkles, Disc, Cog];
 
 type SourcingItem = {
   subtitle: string;
@@ -31,6 +42,7 @@ type ProductsCatalog = {
   browseEyebrow: string;
   browseTitle: string;
   browseDesc: string;
+  quickItems: string[];
   sourcingEyebrow: string;
   sourcingTitle: string;
   sourcingDesc: string;
@@ -70,6 +82,27 @@ export function ProductsContent({
             title={productsCat.browseTitle}
             description={productsCat.browseDesc}
           />
+
+          {(productsCat.quickItems ?? []).length > 0 && (
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              {productsCat.quickItems.map((item, i) => {
+                const Icon = quickItemIcons[i] ?? Sparkles;
+                return (
+                  <Link
+                    key={item}
+                    href="/enquire"
+                    className="group flex items-center gap-3 rounded-2xl border border-line bg-white p-4 shadow-card transition-all hover:-translate-y-0.5 hover:border-royal/30 hover:shadow-card-hover"
+                  >
+                    <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-softblue text-royal transition-colors group-hover:bg-royal group-hover:text-white">
+                      <Icon className="size-5" aria-hidden />
+                    </span>
+                    <p className="flex-1 text-[14px] font-bold leading-snug text-navy">{item}</p>
+                    <ArrowRight className="size-4 shrink-0 text-royal transition-transform group-hover:translate-x-0.5" aria-hidden />
+                  </Link>
+                );
+              })}
+            </div>
+          )}
 
           <SectionReveal>
             <CatalogExplorer initialProducts={products} canRefresh={canRefresh} />
