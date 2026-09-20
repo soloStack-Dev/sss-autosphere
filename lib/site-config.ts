@@ -14,7 +14,7 @@ export const siteConfig = {
 
   // Confirmed business details (supplied by the owner)
   phone: "9840527931",
-  phoneAlt: "7708066680",
+  phoneAlt: "7708066686",
   email: "Salaudeen5010@gmail.com",
   hours: "9:00 am to 9:00 pm - Tamil Support",
   address: "No. 45/39, South Coovam River Road, Pudupet, Chennai, Tamil Nadu 600002",
