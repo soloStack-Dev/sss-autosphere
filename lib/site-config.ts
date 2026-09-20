@@ -16,7 +16,7 @@ export const siteConfig = {
   // Confirmed business details (supplied by the owner)
   phone: "9840527931",
   phoneAlt: "7708066686",
-  email: "salaudeen@contact.sssautospares.com",
+  email: "salaudeen@contact.sssautospare.com",
   emailOwner: "Salaudeen5010@gmail.com",
   hours: "9:00 am to 9:00 pm - Tamil Support",
   address: "No. 45/39, South Coovam River Road, Pudupet, Chennai, Tamil Nadu 600002",
@@ -34,7 +34,7 @@ export const siteConfig = {
   topBar: {
     left: "9840527931 • Chennai, TN",
     hours: "Hours: 9:00 am to 9:00 pm - Tamil Support",
-    right: "salaudeen@contact.sssautospares.com | Verified OEM/OES Supply Hub",
+    right: "salaudeen@contact.sssautospare.com | Verified OEM/OES Supply Hub",
   },
 
   recordId: "MAS-SP-2024",

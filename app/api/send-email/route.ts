@@ -43,7 +43,7 @@ ${message}`;
   try {
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({
-      from: process.env.RESEND_FROM ?? "SSS Auto Spares <noreply@contact.sssautospares.com>",
+      from: process.env.RESEND_FROM ?? "SSS Auto Spares <noreply@contact.sssautospare.com>",
       to: [to],
       replyTo: email || undefined,
       subject,
