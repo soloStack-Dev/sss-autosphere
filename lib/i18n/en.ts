@@ -66,6 +66,13 @@ const en = {
     delivery: "Chennai counter pickup & delivery",
     quickAvailability: "Quick Availability",
     enquireForVehicle: "Enquire for your vehicle",
+    rotorLabel: "Supplying",
+    rotorWords: [
+      "Car Spare Parts",
+      "Body Parts",
+      "Quality Used Spares",
+      "Vehicle Buying",
+    ],
   },
   metrics: {
     partsTitle: "10,000+ Parts",
@@ -261,7 +268,7 @@ const en = {
     sku: "SKU / Part Number",
     skuPh: "e.g. HLP-8920",
     partName: "Part Name",
-    partNamePh: "e.g. Dual Projector Headlamp Assembly",
+    partNamePh: "e.g. Car Alaiwheel",
     category: "Category",
     categoryPh: "e.g. LIGHTING & ELECTRICAL",
     condition: "Condition",

@@ -110,9 +110,9 @@ create policy "Anyone can upload product images"
 insert into public.products
   (id, sku, name, category, badge, condition, image, vehicle_compatibility, price, stock_status, description, sort_order)
 values
-  (gen_random_uuid(), 'BMP-7701', 'Car Front Bumper Assembly', 'CAR BODY PARTS', 'New / OEM Grade', 'New / OEM Grade', '/images/product/product-one-ssauto.jpeg', '[Confirm Vehicle Fitment]', 'Contact for Price', 'Enquire for Availability', 'Complete front bumper assembly with grille and lower air-intake provisions, prepared for precise OEM fitment.', 1),
-  (gen_random_uuid(), 'HLP-8920', 'Dual Projector Headlamp Assembly', 'LIGHTING & ELECTRICAL', 'New', 'New', '/images/product/product-two-ssauto.jpeg', '[Confirm Fitment]', 'Contact for Price', 'Enquire for Availability', 'Modern dual-projector headlight unit with integrated turn-signal element and authentic mounting brackets.', 2),
-  (gen_random_uuid(), 'BRK-4412', 'High-Carbon Ventilated Brake Disc', 'CAR SPARE PARTS (BRAKING)', 'New / Tested', 'New / Tested', '/images/product/product-three-ssauto.jpeg', '[Confirm Fitment]', 'Contact for Price', 'Enquire for Availability', 'Ventilated high-carbon rotor with machined surfaces, checked for run-out and dimensional tolerance before dispatch.', 3)
+  (gen_random_uuid(), 'BMP-7701', 'Car original all spares Available', 'CAR BODY PARTS', 'New / OEM Grade', 'New / OEM Grade', '/images/product/product-one-ssauto.jpeg', '[Confirm Vehicle Fitment]', 'Contact for Price', 'Enquire for Availability', 'Complete front bumper assembly with grille and lower air-intake provisions, prepared for precise OEM fitment.', 1),
+  (gen_random_uuid(), 'HLP-8920', 'Car Alaiwheel', 'LIGHTING & ELECTRICAL', 'New', 'New', '/images/product/product-two-ssauto.jpeg', '[Confirm Fitment]', 'Contact for Price', 'Enquire for Availability', 'Modern dual-projector headlight unit with integrated turn-signal element and authentic mounting brackets.', 2),
+  (gen_random_uuid(), 'BRK-4412', 'Car Alaiwheel', 'CAR SPARE PARTS (BRAKING)', 'New / Tested', 'New / Tested', '/images/product/product-three-ssauto.jpeg', '[Confirm Fitment]', 'Contact for Price', 'Enquire for Availability', 'Ventilated high-carbon rotor with machined surfaces, checked for run-out and dimensional tolerance before dispatch.', 3)
 on conflict (sku) do nothing;
 
 insert into public.gallery_items

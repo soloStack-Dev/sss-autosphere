@@ -176,5 +176,47 @@ Partial prerender: `/protected`, `/auth/error`
   `bun run build` EXIT=0 (23 routes). Confirmed the deleted feedback row is gone
   from the live table (`select name` → `[]`); the UI sync drops it on next load.
 
+## Feature (2026-09-20) — GSAP animations + rotating headline words
+- New `lib/gsap.ts`: single `gsap.registerPlugin(ScrollTrigger)` registration so
+  every animation module shares one instance.
+- New animation primitives under `components/animations/`:
+  - `rotating-words.tsx` — rotateX / rotateY-free headline word rotator with a
+    `transformPerspective` flip, `aria-live="polite"`, static fallback for
+    `prefers-reduced-motion`.
+  - `split-title.tsx` — word-mask entrance (`[data-split-word]`, overflow-hidden
+    row), optional scroll-into-view via `onView`, `as` h1/h2/h3.
+  - `count-up.tsx` — leading-number counter (en-IN formatting), stays a plain
+    string for non-numeric values, reduced-motion renders final value.
+  - `magnetic.tsx` — gsap.quickTo pointer magnetic hover micro-interaction.
+- Wiring:
+  - `page-banner.tsx` is now a client component: eyebrow/description fade-stagger,
+    title via `SplitTitle` (used on About, Products, Payment, Gallery, Enquire,
+    Feedback, Share).
+  - `section-heading.tsx` is now a client component: eyebrow/description
+    ScrollTrigger-once fade, title via `SplitTitle`.
+  - Home hero: `[data-hero-fade]` entrance stagger, two-segment `SplitTitle`,
+    `RotatingWords` row (`hero.rotorLabel` + `hero.rotorWords[]`), magnetic CTA
+    buttons, floating `[data-hero-float]` info card, and the trust-metric strip
+    now counts up via `CountUp`.
+  - About: stats count up; the enquiry CTA is magnetic.
+- i18n: added `hero.rotorLabel` + `hero.rotorWords[]` to `en.ts`, `ta.ts`, `hi.ts`.
+- Every animation guards `prefers-reduced-motion` and tears down via
+  `gsap.context`/tween `kill`. Fixed TS narrowing error in shared closures
+  (arrow functions instead of hoisted `function` declarations).
+- Verified: `bun run lint` EXIT=0, `bun run test --run` 51 passed (6 files),
+  `bun run build` EXIT=0 (23 routes).
+
+## Feature (2026-09-20) — Renamed the three catalogue products
+- Per owner: replaced the sample catalogue items "Car Front Bumper Assembly",
+  "Dual Projector Headlamp Assembly", "High-Carbon Ventilated Brake Disc" with
+  "Car original all spares Available", "Car Alaiwheel", "Car Alaiwheel".
+- Updated `lib/data/products.ts` (rows BMP-7701 / HLP-8920 / BRK-4412) and the
+  matching seed rows in `supabase/migrations/20260101000000_sss_auto_spares_init.sql`.
+- Also refreshed the enquiry form's `partNamePh` example string in `en.ts`,
+  `ta.ts`, `hi.ts` (was referencing the removed "Dual Projector Headlamp
+  Assembly").
+- Verified: `bun run lint` EXIT=0, `bun run test --run` 51 passed (6 files),
+  `bun run build` EXIT=0 (23 routes).
+
 
 

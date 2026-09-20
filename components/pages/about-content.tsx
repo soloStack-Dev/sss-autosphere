@@ -9,6 +9,8 @@ import { SectionReveal } from "@/components/layout/section-reveal";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { SpecialisationsBand } from "@/components/shared/specialisations-band";
 import { VehicleServicesBand } from "@/components/shared/vehicle-services-band";
+import { CountUp } from "@/components/animations/count-up";
+import { Magnetic } from "@/components/animations/magnetic";
 import {
   ShieldCheck,
   BadgeCheck,
@@ -198,7 +200,9 @@ export function AboutContent() {
             <ul className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
               {(about.statsLabels ?? []).map((label, i) => (
                 <li key={label} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-5">
-                  <p className="text-xl font-extrabold text-orange-300">{stats[i]}</p>
+                  <p className="text-xl font-extrabold text-orange-300">
+                    <CountUp value={stats[i]} />
+                  </p>
                   <p className="mt-1 text-[11px] font-bold uppercase tracking-wide text-blue-100/70">{label}</p>
                 </li>
               ))}
@@ -209,12 +213,14 @@ export function AboutContent() {
             <p className="mt-2 text-sm leading-relaxed text-blue-100/80">
               {about.ctaDesc}
             </p>
+            <Magnetic>
             <Link
               href="/enquire"
               className="mt-5 inline-flex items-center gap-2 rounded-xl bg-orange-400 px-5 py-3 text-sm font-bold text-navy transition-transform hover:-translate-y-0.5"
             >
               <PhoneCall className="size-4" aria-hidden /> {t("common.enquireNow")}
             </Link>
+          </Magnetic>
           </div>
         </div>
       </section>

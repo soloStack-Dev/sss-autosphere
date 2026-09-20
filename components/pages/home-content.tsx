@@ -2,15 +2,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useLayoutEffect, useRef } from "react";
 import { siteConfig } from "@/lib/site-config";
 import { homeCategories, services, trustMetrics, trustPoints } from "@/lib/data/home";
 import { useCatalog, useT } from "@/lib/i18n";
+import { gsap } from "@/lib/gsap";
 import { SectionReveal } from "@/components/layout/section-reveal";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { VideoShowcase } from "@/components/shared/video-showcase";
 import { SpecialisationsBand } from "@/components/shared/specialisations-band";
 import { VehicleServicesBand } from "@/components/shared/vehicle-services-band";
 import { SocialIcons } from "@/components/shared/social-icons";
+import { SplitTitle } from "@/components/animations/split-title";
+import { RotatingWords } from "@/components/animations/rotating-words";
+import { CountUp } from "@/components/animations/count-up";
+import { Magnetic } from "@/components/animations/magnetic";
 import {
   ArrowRight,
   ShieldCheck,
@@ -92,6 +98,30 @@ type HomeCatalog = {
 export function HomeContent() {
   const t = useT();
   const catalog = useCatalog();
+  const heroRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        "[data-hero-fade]",
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, stagger: 0.12, duration: 0.7, ease: "power3.out", delay: 0.25 },
+      );
+      gsap.to("[data-hero-float]", {
+        y: -10,
+        duration: 2.6,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inOut",
+        delay: 0.9,
+      });
+    }, hero);
+    return () => ctx.revert();
+  }, []);
   const home = catalog.home as HomeCatalog;
   const hero = catalog.hero as {
     badge: string;
@@ -102,6 +132,8 @@ export function HomeContent() {
     delivery: string;
     quickAvailability: string;
     enquireForVehicle: string;
+    rotorLabel: string;
+    rotorWords: string[];
   };
   const metrics = catalog.metrics as {
     partsTitle: string;
@@ -127,7 +159,7 @@ export function HomeContent() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-footer-navy text-white">
+      <section ref={heroRef} className="relative overflow-hidden bg-footer-navy text-white">
         <Image
           src="/images/home/home-img-1.png"
           alt="SSS Auto Spares Chennai warehouse and parts showroom"
@@ -139,32 +171,43 @@ export function HomeContent() {
         <div className="absolute inset-0 bg-gradient-to-r from-footer-navy via-footer-navy/85 to-royal/40" aria-hidden />
         <div className="container-sss relative grid gap-10 py-16 sm:py-24 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
           <div>
-            <p className="inline-flex items-center gap-2 rounded-full border border-orange-300/40 bg-white/5 px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-[0.16em] text-orange-300">
+            <p data-hero-fade className="inline-flex items-center gap-2 rounded-full border border-orange-300/40 bg-white/5 px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-[0.16em] text-orange-300">
               <BadgeCheck className="size-4" aria-hidden />
               {hero.badge}
             </p>
-            <h1 className="mt-5 text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl lg:text-[56px]">
-              {hero.titlePart1}{" "}
-              <span className="text-orange-300">{hero.titlePart2}</span>
-            </h1>
-            <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-blue-100/85 sm:text-base">
+            <SplitTitle
+              as="h1"
+              segments={[{ text: hero.titlePart1 }, { text: hero.titlePart2, accent: true }]}
+              className="mt-5 text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl lg:text-[56px]"
+            />
+            <p data-hero-fade className="mt-4 flex flex-wrap items-center gap-2 sm:gap-3">
+              <span className="text-[11.5px] font-bold uppercase tracking-[0.18em] text-blue-100/70">
+                {hero.rotorLabel}
+              </span>
+              <RotatingWords words={hero.rotorWords ?? []} className="inline-block text-lg font-extrabold text-orange-300" />
+            </p>
+            <p data-hero-fade className="mt-5 max-w-xl text-[15px] leading-relaxed text-blue-100/85 sm:text-base">
               {siteConfig.description}. {hero.desc}
             </p>
-            <div className="mt-7 flex flex-wrap items-center gap-3">
-              <Link
-                href="/products"
-                className="inline-flex items-center gap-2 rounded-xl bg-royal px-5 py-3 text-sm font-bold text-white shadow-card-hover transition-transform hover:-translate-y-0.5 hover:bg-royal/90"
-              >
-                {t("common.browseParts")} <ArrowRight className="size-4" aria-hidden />
-              </Link>
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/25 bg-white/5 px-5 py-3 text-sm font-bold text-white backdrop-blur transition-colors hover:bg-white/10"
-              >
-                {t("common.ourStory")}
-              </Link>
+            <div data-hero-fade className="mt-7 flex flex-wrap items-center gap-3">
+              <Magnetic>
+                <Link
+                  href="/products"
+                  className="inline-flex items-center gap-2 rounded-xl bg-royal px-5 py-3 text-sm font-bold text-white shadow-card-hover transition-transform hover:-translate-y-0.5 hover:bg-royal/90"
+                >
+                  {t("common.browseParts")} <ArrowRight className="size-4" aria-hidden />
+                </Link>
+              </Magnetic>
+              <Magnetic>
+                <Link
+                  href="/about"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/25 bg-white/5 px-5 py-3 text-sm font-bold text-white backdrop-blur transition-colors hover:bg-white/10"
+                >
+                  {t("common.ourStory")}
+                </Link>
+              </Magnetic>
             </div>
-            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-[12.5px] font-semibold text-blue-100/80">
+            <div data-hero-fade className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-[12.5px] font-semibold text-blue-100/80">
               <span className="inline-flex items-center gap-1.5">
                 <Star className="size-4 fill-orange-300 text-orange-300" aria-hidden />
                 {hero.rated}
@@ -181,7 +224,7 @@ export function HomeContent() {
           </div>
 
           <div className="hidden lg:block">
-            <div className="rounded-3xl border border-white/15 bg-white/10 p-6 backdrop-blur-md">
+            <div data-hero-float className="rounded-3xl border border-white/15 bg-white/10 p-6 backdrop-blur-md">
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-orange-300">
                 {hero.quickAvailability}
               </p>
@@ -223,7 +266,9 @@ export function HomeContent() {
                   <Icon className="size-6" aria-hidden />
                 </span>
                 <div>
-                  <p className="text-lg font-extrabold leading-tight text-navy">{row.title}</p>
+                  <p className="text-lg font-extrabold leading-tight text-navy">
+                    <CountUp value={row.title} />
+                  </p>
                   <p className="text-[13px] font-medium text-muted-text">{row.subtitle}</p>
                 </div>
               </div>

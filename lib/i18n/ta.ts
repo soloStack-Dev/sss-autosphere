@@ -66,6 +66,13 @@ const ta = {
     delivery: "சென்னை கவுண்டர் பிக்கப் & டெலிவரி",
     quickAvailability: "சற்றே விலகுங்க, கிடைக்குமா?",
     enquireForVehicle: "உங்க வாகனத்திற்கு கேளுங்க",
+    rotorLabel: "வழங்குகிறோம்",
+    rotorWords: [
+      "கார் ஸ்பேர் பார்ட்ஸ்",
+      "பாடி பார்ட்ஸ்",
+      "நல்ல யூஸ்டு ஸ்பேர்ஸ்",
+      "வாகன கொள்முதல்",
+    ],
   },
   metrics: {
     partsTitle: "10,000+ பார்ட்ஸ்",
@@ -315,7 +322,7 @@ const ta = {
     sku: "SKU / பார்ட் நம்பர்",
     skuPh: "உ.ம். HLP-8920",
     partName: "பார்ட் பெயர்",
-    partNamePh: "உ.ம். Dual Projector Headlamp Assembly",
+    partNamePh: "உ.ம். Car Alaiwheel",
     category: "கேட்டகிரி",
     categoryPh: "உ.ம். LIGHTING & ELECTRICAL",
     condition: "கண்டிஷன்",

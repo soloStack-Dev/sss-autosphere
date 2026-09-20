@@ -66,6 +66,13 @@ const hi = {
     delivery: "चेन्नई काउंटर पिकअप और डिलीवरी",
     quickAvailability: "जल्दी बताइए, मिलेगा क्या?",
     enquireForVehicle: "अपनी गाड़ी के लिए पूछें",
+    rotorLabel: "उपलब्ध कराते हैं",
+    rotorWords: [
+      "कार स्पेयर पार्ट्स",
+      "बॉडी पार्ट्स",
+      "बेहतरीन यूज़्ड स्पेयर्स",
+      "वाहन खरीद",
+    ],
   },
   metrics: {
     partsTitle: "10,000+ पार्ट्स",
@@ -315,7 +322,7 @@ const hi = {
     sku: "SKU / पार्ट नंबर",
     skuPh: "जैसे HLP-8920",
     partName: "पार्ट नाम",
-    partNamePh: "जैसे Dual Projector Headlamp Assembly",
+    partNamePh: "जैसे Car Alaiwheel",
     category: "कैटेगरी",
     categoryPh: "जैसे LIGHTING & ELECTRICAL",
     condition: "कंडीशन",

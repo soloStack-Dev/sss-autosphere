@@ -61,7 +61,7 @@ export const sampleProducts: Product[] = [
   {
     id: "prod-1",
     sku: "BMP-7701",
-    name: "Car Front Bumper Assembly",
+    name: "Car original all spares Available",
     category: "CAR BODY PARTS",
     badge: "New / OEM Grade",
     condition: "New / OEM Grade",
@@ -75,7 +75,7 @@ export const sampleProducts: Product[] = [
   {
     id: "prod-2",
     sku: "HLP-8920",
-    name: "Dual Projector Headlamp Assembly",
+    name: "Car Alaiwheel",
     category: "LIGHTING & ELECTRICAL",
     badge: "New",
     condition: "New",
@@ -89,7 +89,7 @@ export const sampleProducts: Product[] = [
   {
     id: "prod-3",
     sku: "BRK-4412",
-    name: "High-Carbon Ventilated Brake Disc",
+    name: "Car Alaiwheel",
     category: "CAR SPARE PARTS (BRAKING)",
     badge: "New / Tested",
     condition: "New / Tested",
