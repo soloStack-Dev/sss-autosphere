@@ -32,23 +32,18 @@ export async function POST(request: Request) {
 
   const { name, phone, email, message } = parsed.data;
   const to = process.env.RESEND_TO ?? siteConfig.emailOwner;
-  const subject = `Website message from ${name}`;
-  const text = [
-    `New message sent from the ${siteConfig.displayName} website.`,
-    "",
-    `From: ${name}`,
-    phone ? `Phone: ${phone}` : null,
-    email ? `Reply-to email: ${email}` : null,
-    "",
-    message,
-  ]
-    .filter((line): line is string => line !== null)
-    .join("\n");
+  const subject = `New enquiry from ${name}`;
+  const text = `Name: ${name}
+Phone: ${phone || "Not provided"}
+Email: ${email || "Not provided"}
+
+Message:
+${message}`;
 
   try {
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({
-      from: process.env.RESEND_FROM ?? "SSS Auto Spares <salaudeen@contact.sssautospares.com>",
+      from: process.env.RESEND_FROM ?? "SSS Auto Spares <noreply@contact.sssautospares.com>",
       to: [to],
       replyTo: email || undefined,
       subject,
