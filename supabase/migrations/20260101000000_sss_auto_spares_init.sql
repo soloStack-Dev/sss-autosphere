@@ -36,6 +36,12 @@ create policy "Products can be inserted by anyone"
   on public.products for insert
   with check (true);
 
+-- The catalogue edit button updates existing listings anonymously.
+drop policy if exists "Products can be updated by anyone" on public.products;
+create policy "Products can be updated by anyone"
+  on public.products for update
+  using (true) with check (true);
+
 -- ============================================================
 -- GALLERY ITEMS
 -- ============================================================

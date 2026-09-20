@@ -18,7 +18,8 @@ import { useUIStore } from "@/store/ui-store";
 import { useT } from "@/lib/i18n";
 import { Empty } from "@/components/products/empty";
 import { ProductCreateDialog } from "@/components/products/product-create-dialog";
-import { Search, PackageSearch, SlidersHorizontal, Plus } from "lucide-react";
+import { ProductEditDialog } from "@/components/products/product-edit-dialog";
+import { Search, PackageSearch, SlidersHorizontal, Plus, Pencil } from "lucide-react";
 
 type Filters = {
   search: string;
@@ -38,6 +39,8 @@ export function CatalogExplorer({ initialProducts, canRefresh }: Props) {
   const t = useT();
   const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editing, setEditing] = useState<Product | null>(null);
   const [filters, setFilters] = useState<Filters>({
     search: "",
     category: "all",
@@ -98,6 +101,12 @@ export function CatalogExplorer({ initialProducts, canRefresh }: Props) {
       created,
       ...(old ?? initialProducts),
     ]);
+  };
+
+  const updateProduct = (updated: Product) => {
+    queryClient.setQueryData<Product[]>(["catalogue", "products"], (old) =>
+      (old ?? initialProducts).map((p) => (p.id === updated.id ? updated : p)),
+    );
   };
 
   const catLabel = (id: string, fallback: string) => {
@@ -201,6 +210,17 @@ export function CatalogExplorer({ initialProducts, canRefresh }: Props) {
                 <span className="absolute left-3 top-3 rounded-md bg-royal px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wide text-white">
                   {p.condition}
                 </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditing(p);
+                    setEditOpen(true);
+                  }}
+                  aria-label={t("ped.editAria").replace("{part}", p.name)}
+                  className="absolute right-3 top-3 rounded-lg border border-line bg-white/90 p-2 text-navy shadow-sm backdrop-blur transition-colors hover:bg-royal hover:text-white"
+                >
+                  <Pencil className="size-3.5" aria-hidden />
+                </button>
               </div>
               <div className="flex flex-1 flex-col p-5">
                 <div className="flex items-start justify-between gap-2">
@@ -244,6 +264,13 @@ export function CatalogExplorer({ initialProducts, canRefresh }: Props) {
         open={createOpen}
         onOpenChange={setCreateOpen}
         onCreated={addProduct}
+      />
+
+      <ProductEditDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        product={editing}
+        onUpdated={updateProduct}
       />
     </div>
   );

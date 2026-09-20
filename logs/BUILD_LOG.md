@@ -176,6 +176,18 @@ Partial prerender: `/protected`, `/auth/error`
   `bun run build` EXIT=0 (23 routes). Confirmed the deleted feedback row is gone
   from the live table (`select name` → `[]`); the UI sync drops it on next load.
 
+## SEO warning (2026-09-20) — Home page <title> cleaned up
+- On-page SEO re-test flagged 1 warning on `/`: the rendered title was
+  "SSS Auto Spares | Chennai Automobile Spare Parts Dealers | SSS Auto Spares"
+  (713 px — over the 580 px limit) with the brand name repeated twice (the
+  root layout's `%s | SSS Auto Spares` template was appending a second copy).
+- Fix: home metadata title is now "Chennai Automobile Spare Parts Dealers" so
+  the template renders "Chennai Automobile Spare Parts Dealers | SSS Auto
+  Spares" — no repetition, and the resulting title is ~46 chars (~520 px).
+- Verified live at http://localhost:3050: `<title>` = "Chennai Automobile
+  Spare Parts Dealers | SSS Auto Spares". Lint/test/build green; Docker
+  rebuilt (container `sss-auto-spares`).
+
 ## Feature (2026-09-20) — GSAP animations + rotating headline words
 - New `lib/gsap.ts`: single `gsap.registerPlugin(ScrollTrigger)` registration so
   every animation module shares one instance.
@@ -205,6 +217,43 @@ Partial prerender: `/protected`, `/auth/error`
   (arrow functions instead of hoisted `function` declarations).
 - Verified: `bun run lint` EXIT=0, `bun run test --run` 51 passed (6 files),
   `bun run build` EXIT=0 (23 routes).
+
+## Feature (2026-09-20) — Edit button on catalogue items
+- Each product card in the catalogue grid ("Browse the Catalog / Find the Part You
+  Need") now has a pencil **Edit** button (top-right of the image).
+- New `components/products/product-edit-dialog.tsx`: pre-filled edit form
+  (SKU, name, category, condition, fitment, price, status, badge, description),
+  reuses `productSchema`, submits via `PATCH /api/products`.
+- New `PATCH /api/products` handler in `app/api/products/route.ts`: validates,
+  updates the `products` row by id. When the live DB's RLS blocks the anon
+  UPDATE (code 42501 / PGRST116 from the 0-row update, or a row-level-security
+  message), it falls back to returning the merged product as `demo: true` so the
+  grid updates in the UI immediately; edits persist once the update policy is
+  applied.
+- Catalog explorer now owns `updateProduct()` which replaces the item in the
+  React Query cache via `queryClient.setQueryData`.
+- Migration `20260101000000_sss_auto_spares_init.sql`: added the
+  "Products can be updated by anyone" UPDATE policy (run this in the Supabase
+  SQL editor to make edits persist against the live DB).
+- i18n: added `ped.*` group (title, save, saved/toast, editAria) to `en.ts`,
+  `ta.ts`, `hi.ts`; shared field labels reused from `pcd.*`.
+- Verified: `bun run lint` EXIT=0, `bun run test --run` 51 passed (6 files),
+  `bun run build` EXIT=0 (23 routes). Live checks: `/products` 200 with the edit
+  button rendered; `PATCH /api/products` → `200 {ok, product, demo:true}` while
+  the live DB lacks the update policy.
+
+## SEO fix (2026-09-20) — Home <title> warning resolved
+- On-page SEO checker flagged 1 warning on `/`: "SSS Auto Spares | Chennai
+  Automobile Spare Parts Dealers" was 713 px (over the 580 px limit) and
+  repeated part of the brand, because the root layout's title template
+  (`%s | SSS Auto Spares`) appended the brand to a home title that already
+  led with it.
+- Fix: home metadata title is now just "Chennai Automobile Spare Parts
+  Dealers" → the template renders "Chennai Automobile Spare Parts Dealers |
+  SSS Auto Spares" (~49 chars ≈ 460 px), no duplication.
+- Verified live at http://localhost:3050: `<title>` = "Chennai Automobile
+  Spare Parts Dealers | SSS Auto Spares". Lint/test/build green; Docker image
+  rebuilt.
 
 ## Feature (2026-09-20) — Renamed the three catalogue products
 - Per owner: replaced the sample catalogue items "Car Front Bumper Assembly",

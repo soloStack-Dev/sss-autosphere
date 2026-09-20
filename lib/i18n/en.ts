@@ -303,6 +303,18 @@ const en = {
     save: "Add New Part",
     close: "Close",
   },
+  ped: {
+    eyebrow: "Edit Catalogue Entry",
+    title: "Edit Part Details",
+    dialogAria: "Edit this part in the catalogue",
+    closeAria: "Close dialog",
+    editAria: "Edit {part}",
+    save: "Save Changes",
+    saving: "Saving…",
+    saveFail: "Could not save the changes. Try again.",
+    savedTitle: "Part updated",
+    savedDesc: "{name} ({sku}) has been updated.",
+  },
   gallery: {
     bannerEyebrow: "Parts Gallery",
     bannerTitle: "Inside SSS Auto Spares",
