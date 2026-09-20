@@ -3,7 +3,11 @@ import { ThemeProvider } from "next-themes";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
-const defaultUrl = siteConfig.siteUrl;
+const defaultUrl = process.env.APP_URL
+  ? process.env.APP_URL
+  : process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : siteConfig.siteUrl;
 
 const jsonLd = {
   "@context": "https://schema.org",
