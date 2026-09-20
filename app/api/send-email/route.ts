@@ -48,7 +48,7 @@ export async function POST(request: Request) {
   try {
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({
-      from: process.env.RESEND_FROM ?? "SSS Auto Spares <onboarding@resend.dev>",
+      from: process.env.RESEND_FROM ?? "SSS Auto Spares <noreply@contact.sssautospares.com>",
       to: [to],
       replyTo: email || undefined,
       subject,
