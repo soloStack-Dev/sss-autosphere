@@ -31,6 +31,14 @@ const jsonLd = {
   },
 };
 
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteConfig.displayName,
+  alternateName: siteConfig.name,
+  url: `${defaultUrl}/`,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
   title: {
@@ -74,6 +82,10 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+          />
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
