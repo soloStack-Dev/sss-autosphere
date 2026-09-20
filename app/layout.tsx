@@ -7,7 +7,29 @@ const defaultUrl = process.env.NEXT_PUBLIC_APP_URL
   ? process.env.NEXT_PUBLIC_APP_URL
   : process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
-    : "http://localhost:3000";
+    : "https://www.sssautospare.com";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "AutoPartsStore",
+  name: siteConfig.name,
+  url: `${defaultUrl}/`,
+  telephone: `+91-${siteConfig.phone}`,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "No. 45/39, South Coovam River Road, Pudupet",
+    addressLocality: "Chennai",
+    addressRegion: "Tamil Nadu",
+    postalCode: "600002",
+    addressCountry: "IN",
+  },
+  openingHours: "Mo-Su 09:00-21:00",
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: siteConfig.map.lat,
+    longitude: siteConfig.map.lng,
+  },
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
@@ -52,6 +74,10 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
           {children}
         </ThemeProvider>
       </body>
