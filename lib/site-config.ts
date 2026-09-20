@@ -15,7 +15,7 @@ export const siteConfig = {
   // Confirmed business details (supplied by the owner)
   phone: "9840527931",
   phoneAlt: "7708066680",
-  email: "faleelmr4@gmail.com",
+  email: "Salaudeen5010@gmail.com",
   hours: "9:00 am to 9:00 pm - Tamil Support",
   address: "No. 45/39, South Coovam River Road, Pudupet, Chennai, Tamil Nadu 600002",
   warehouseAddress: "No. 45/39, South Coovam River Road, Pudupet, Chennai, Tamil Nadu 600002",
@@ -32,7 +32,7 @@ export const siteConfig = {
   topBar: {
     left: "9840527931 • Chennai, TN",
     hours: "Hours: 9:00 am to 9:00 pm - Tamil Support",
-    right: "faleelmr4@gmail.com | Verified OEM/OES Supply Hub",
+    right: "Salaudeen5010@gmail.com | Verified OEM/OES Supply Hub",
   },
 
   recordId: "MAS-SP-2024",
