@@ -1,25 +1,17 @@
 import type { MetadataRoute } from "next";
 
+const base = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.sssautospare.com";
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-  const now = new Date();
-  const staticRoutes = [
-    "",
-    "/about",
-    "/products",
-    "/payment",
-    "/gallery",
-    "/feedback",
-    "/enquire",
-    "/share",
-    "/privacy",
-    "/terms",
-    "/warranty",
-  ] as const;
-  return staticRoutes.map((route) => ({
-    url: `${base}${route}`,
-    lastModified: now,
-    changeFrequency: (route === "" || route === "/products" ? "daily" : "weekly") as MetadataRoute.Sitemap[number]["changeFrequency"],
-    priority: route === "" ? 1 : route === "/products" ? 0.9 : 0.7,
+  const lastModified = new Date().toISOString().slice(0, 10);
+  const routes = [
+    { route: "", loc: `${base}/` },
+    ...["/about", "/products", "/payment", "/gallery", "/feedback", "/enquire", "/share", "/privacy", "/terms", "/warranty"].map(
+      (route) => ({ route, loc: `${base}${route}` }),
+    ),
+  ];
+  return routes.map(({ loc }) => ({
+    url: loc,
+    lastModified,
   }));
 }
