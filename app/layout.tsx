@@ -3,11 +3,7 @@ import { ThemeProvider } from "next-themes";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
-const defaultUrl = process.env.NEXT_PUBLIC_APP_URL
-  ? process.env.NEXT_PUBLIC_APP_URL
-  : process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "https://www.sssautospare.com";
+const defaultUrl = siteConfig.siteUrl;
 
 const jsonLd = {
   "@context": "https://schema.org",

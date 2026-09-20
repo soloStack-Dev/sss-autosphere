@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
+import { siteConfig } from "@/lib/site-config";
 
-const base = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.sssautospare.com";
+const base = process.env.NEXT_PUBLIC_APP_URL ?? siteConfig.siteUrl;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date().toISOString().slice(0, 10);

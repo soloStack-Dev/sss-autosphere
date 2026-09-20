@@ -9,6 +9,7 @@
 export const siteConfig = {
   name: "SSS AUTO SPARES",
   displayName: "SSS Auto Spares",
+  siteUrl: "https://www.sssautospare.com",
   tagline: "Chennai Automobile Parts",
   establishedNote: "Genuine Parts & Vehicle Solutions",
 
