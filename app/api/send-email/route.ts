@@ -31,6 +31,7 @@ export async function POST(request: Request) {
   }
 
   const { name, phone, email, message } = parsed.data;
+  const to = process.env.RESEND_TO ?? siteConfig.email;
   const subject = `Website message from ${name}`;
   const text = [
     `New message sent from the ${siteConfig.displayName} website.`,
@@ -48,7 +49,7 @@ export async function POST(request: Request) {
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({
       from: process.env.RESEND_FROM ?? "SSS Auto Spares <onboarding@resend.dev>",
-      to: [siteConfig.email],
+      to: [to],
       replyTo: email || undefined,
       subject,
       text,
