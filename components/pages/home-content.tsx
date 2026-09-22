@@ -72,6 +72,9 @@ type HomeCatalog = {
   categoriesEyebrow: string;
   categoriesTitle: string;
   categoriesDesc: string;
+  pudupetTitle: string;
+  pudupetDesc: string;
+  pudupetContact: string;
   servicesEyebrow: string;
   servicesTitle: string;
   servicesDesc: string;
@@ -187,7 +190,16 @@ export function HomeContent() {
               <RotatingWords words={hero.rotorWords ?? []} className="inline-block text-lg font-extrabold text-orange-300" />
             </p>
             <p data-hero-fade className="mt-5 max-w-xl text-[15px] leading-relaxed text-blue-100/85 sm:text-base">
-              {siteConfig.description}. {hero.desc}
+              {hero.desc}
+            </p>
+            <p data-hero-fade className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[14px] font-semibold text-blue-100/90">
+              <span className="text-orange-300">Contact: {siteConfig.proprietor} |</span>
+              <a href={`tel:+91${siteConfig.phone}`} className="hover:text-white">
+                {siteConfig.phone}
+              </a>
+              <a href={`tel:+91${siteConfig.phoneAlt}`} className="hover:text-white">
+                {siteConfig.phoneAlt}
+              </a>
             </p>
             <div data-hero-fade className="mt-7 flex flex-wrap items-center gap-3">
               <Magnetic>
@@ -274,6 +286,52 @@ export function HomeContent() {
               </div>
             );
           })}
+        </div>
+      </section>
+
+      {/* Pudupet local hub */}
+      <section className="section-pad bg-white">
+        <div className="container-sss grid items-center gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+          <div>
+            <SectionHeading
+              align="left"
+              eyebrow={home.pudupetContact}
+              title={home.pudupetTitle}
+              description={home.pudupetDesc}
+            />
+            <Link
+              href="/enquire"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-royal px-5 py-3 text-sm font-bold text-white transition-transform hover:-translate-y-0.5 hover:bg-royal/90"
+            >
+              {t("common.startEnquiry")} <ArrowRight className="size-4" aria-hidden />
+            </Link>
+          </div>
+          <div className="rounded-2xl border border-line bg-paleblue p-6">
+            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-royal">
+              <PhoneCall className="size-4" aria-hidden />
+              {home.pudupetContact}
+            </p>
+            <p className="mt-4 text-[15px] font-bold text-navy">SSS Auto Spares</p>
+            <p className="mt-1 text-[13.5px] leading-relaxed text-body-text">
+              {siteConfig.warehouseAddress}
+            </p>
+            <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2">
+              <a
+                href={`tel:+91${siteConfig.phone}`}
+                className="inline-flex items-center gap-2 rounded-lg bg-royal px-3.5 py-2 text-sm font-bold text-white transition-colors hover:bg-royal/90"
+              >
+                <PhoneCall className="size-4" aria-hidden />
+                {siteConfig.phone}
+              </a>
+              <a
+                href={`tel:+91${siteConfig.phoneAlt}`}
+                className="inline-flex items-center gap-2 rounded-lg border border-line bg-white px-3.5 py-2 text-sm font-bold text-navy transition-colors hover:bg-softblue"
+              >
+                <PhoneCall className="size-4" aria-hidden />
+                {siteConfig.phoneAlt}
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -58,10 +58,10 @@ const en = {
   },
   hero: {
     badge: "Chennai's Trusted Auto-Spares Hub",
-    titlePart1: "Genuine Spares,",
-    titlePart2: "Old & New.",
+    titlePart1: "Car Spare Parts",
+    titlePart2: "in Chennai",
     desc:
-      "From everyday car spares to rare legacy parts — authentic ranges, transparent pricing, and fast Chennai dispatch.",
+      "SSS Auto Spares in Pudupet, Chennai supplies genuine, quality used and second-hand car spare parts, body parts and vehicle components for old and new cars.",
     rated: "Rated for part accuracy",
     delivery: "Chennai counter pickup & delivery",
     quickAvailability: "Quick Availability",
@@ -87,6 +87,10 @@ const en = {
     categoriesTitle: "Everything Your Vehicle Needs",
     categoriesDesc:
       "A complete range of new, OEM-grade, and quality used spares, plus genuine vehicle purchasing services — all under one trusted Chennai roof.",
+    pudupetTitle: "Car Spare Parts in Pudupet, Chennai",
+    pudupetDesc:
+      "SSS Auto Spares is located in Pudupet, Chennai, providing car spare parts, car body parts, used spare parts and vehicle solutions for customers across Chennai.",
+    pudupetContact: "Contact Salaudeen:",
     servicesEyebrow: "Why SSS Auto Spares",
     servicesTitle: "Parts Service, Done Right",
     servicesDesc:

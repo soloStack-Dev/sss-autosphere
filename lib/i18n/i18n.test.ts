@@ -3,17 +3,17 @@ import { translate } from "@/lib/i18n";
 
 describe("translate", () => {
   it("resolves an English key", () => {
-    expect(translate("en", "hero.titlePart1")).toBe("Genuine Spares,");
+    expect(translate("en", "hero.titlePart1")).toBe("Car Spare Parts");
   });
 
   it("resolves a Tamil key from the Tamil catalog", () => {
     expect(translate("ta", "hero.titlePart1")).toBe(
-      "ஜெனுயின் ஸ்பேர்ஸ்,",
+      "கார் ஸ்பேர் பார்ட்ஸ்",
     );
   });
 
   it("resolves a Hindi key from the Hindi catalog", () => {
-    expect(translate("hi", "hero.titlePart1")).toBe("असली स्पेयर्स,");
+    expect(translate("hi", "hero.titlePart1")).toBe("कार स्पेयर पार्ट्स");
   });
 
   it("resolves array items via dotted paths", () => {

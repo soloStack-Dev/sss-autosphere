@@ -22,7 +22,7 @@ export const siteConfig = {
   address: "No. 45/39, South Coovam River Road, Pudupet, Chennai, Tamil Nadu 600002",
   warehouseAddress: "No. 45/39, South Coovam River Road, Pudupet, Chennai, Tamil Nadu 600002",
   location: "Chennai, TN",
-  proprietor: "[Confirm preferred display name]",
+  proprietor: "Salaudeen",
 
   // Shop location on the map (resolved from the official Google Maps pin)
   map: {

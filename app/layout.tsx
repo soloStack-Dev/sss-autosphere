@@ -15,6 +15,22 @@ const jsonLd = {
   name: siteConfig.name,
   url: `${defaultUrl}/`,
   telephone: `+91-${siteConfig.phone}`,
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      name: siteConfig.proprietor,
+      telephone: `+91-${siteConfig.phone}`,
+      contactType: "sales",
+      areaServed: "IN",
+      availableLanguage: ["English", "Tamil"],
+    },
+    {
+      "@type": "ContactPoint",
+      telephone: `+91-${siteConfig.phoneAlt}`,
+      contactType: "customer support",
+      areaServed: "IN",
+    },
+  ],
   address: {
     "@type": "PostalAddress",
     streetAddress: "No. 45/39, South Coovam River Road, Pudupet",
