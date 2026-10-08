@@ -444,9 +444,11 @@ const en = {
     copied: "Copied!",
     copyToast: "Link copied",
     copyErr: "Could not copy",
-    nativeTitle: "SSS Auto Spares Chennai",
-    nativeText: "Genuine spare parts, quality used spares & vehicle solutions.",
-    waText: "SSS Auto Spares Chennai — genuine spare parts & vehicle solutions: {url}",
+    nativeTitle: "SSS Auto Spares | Chennai, TN",
+    nativeText:
+      "Car Spare Parts in Chennai | SSS Auto Spares\n\nSSS Auto Spares in Pudupet, Chennai supplies genuine and quality used car spare parts, body parts and vehicle solutions.\n\nVisit:\n{url}",
+    waText:
+      "Car Spare Parts in Chennai | SSS Auto Spares\n\nSSS Auto Spares in Pudupet, Chennai supplies genuine and quality used car spare parts, body parts and vehicle solutions.\n\nVisit: {url}",
     benefits: [
       {
         title: "Instant Access to Catalog",

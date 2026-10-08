@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     "car spare parts Pudupet",
     "auto spare parts Pudupet",
   ],
+  alternates: {
+    canonical: "https://www.sssautospare.com/",
+  },
 };
 
 export default function HomePage() {

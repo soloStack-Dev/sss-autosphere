@@ -4,7 +4,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/ui-store";
 import { useT } from "@/lib/i18n";
+import { siteConfig } from "@/lib/site-config";
 import { Check, Copy, MessageCircle, Share2 } from "lucide-react";
+
+const shareUrl = siteConfig.siteUrl;
 
 export function ShareWebsite() {
   const pushToast = useUIStore((s) => s.pushToast);
@@ -12,11 +15,10 @@ export function ShareWebsite() {
   const [copied, setCopied] = useState(false);
 
   async function copyLink() {
-    const url = window.location.origin;
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
-      pushToast({ title: t("share.copyToast"), description: url, tone: "success" });
+      pushToast({ title: t("share.copyToast"), description: shareUrl, tone: "success" });
       setTimeout(() => setCopied(false), 2000);
     } catch {
       pushToast({ title: t("share.copyErr"), tone: "error" });
@@ -24,13 +26,12 @@ export function ShareWebsite() {
   }
 
   async function shareNative() {
-    const url = window.location.origin;
     if (navigator.share) {
       try {
         await navigator.share({
           title: t("share.nativeTitle"),
-          text: t("share.nativeText"),
-          url,
+          text: t("share.nativeText").replace("{url}", shareUrl),
+          url: shareUrl,
         });
       } catch {
         // user dismissed share sheet
@@ -41,10 +42,7 @@ export function ShareWebsite() {
   }
 
   const whatsapp = `https://wa.me/?text=${encodeURIComponent(
-    t("share.waText").replace(
-      "{url}",
-      typeof window !== "undefined" ? window.location.origin : "",
-    ),
+    t("share.waText").replace("{url}", shareUrl),
   )}`;
 
   return (

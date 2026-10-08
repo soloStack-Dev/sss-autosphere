@@ -55,6 +55,14 @@ const websiteJsonLd = {
   url: `${defaultUrl}/`,
 };
 
+const siteUrl = siteConfig.siteUrl;
+
+const shareTitle = "SSS Auto Spares | Chennai, TN";
+const shareDescription =
+  "SSS Auto Spares in Pudupet, Chennai supplies car spare parts, body parts, quality used spares and vehicle solutions.";
+const shareImageUrl = `${siteUrl}/autospares-sss.jpeg`;
+const shareImageAlt = "SSS Auto Spares - Car Spare Parts in Chennai";
+
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
   title: {
@@ -72,11 +80,31 @@ export const metadata: Metadata = {
     "scrap vehicle purchasing",
   ],
   openGraph: {
-    title: `${siteConfig.displayName} | ${siteConfig.location}`,
-    description: siteConfig.description,
+    title: shareTitle,
+    description: shareDescription,
+    url: `${siteUrl}/`,
     type: "website",
     locale: "en_IN",
     siteName: siteConfig.displayName,
+    images: [
+      {
+        url: shareImageUrl,
+        width: 1200,
+        height: 630,
+        alt: shareImageAlt,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: shareTitle,
+    description: shareDescription,
+    images: [
+      {
+        url: shareImageUrl,
+        alt: shareImageAlt,
+      },
+    ],
   },
   robots: {
     index: true,
